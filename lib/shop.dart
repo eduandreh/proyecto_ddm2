@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 
 class Shop extends StatefulWidget {
@@ -12,7 +10,16 @@ class Shop extends StatefulWidget {
 }
 
 class _Shop extends State<Shop> {
+
   int _counter = 0;
+
+  List<String> accessoriesImages = [
+    "https://firebasestorage.googleapis.com/v0/b/duffy-264e6.appspot.com/o/shop_accessories%2Fumbrella_shop.png?alt=media&token=6eeff6b4-2c6d-4bdf-a8e9-35507390c3fe",
+    "https://firebasestorage.googleapis.com/v0/b/duffy-264e6.appspot.com/o/shop_accessories%2FsunGlasses_shop.png?alt=media&token=e758ee82-652c-4ac6-b348-cbf33461a398",
+    "https://firebasestorage.googleapis.com/v0/b/duffy-264e6.appspot.com/o/shop_accessories%2Fscarf_shop.png?alt=media&token=e9988a16-d556-4451-8d77-0cfec965977d",
+    "https://firebasestorage.googleapis.com/v0/b/duffy-264e6.appspot.com/o/shop_accessories%2Fhat_shop.png?alt=media&token=4d3c03c4-d55d-4497-8b1b-1fba5ce116e4",
+    "https://firebasestorage.googleapis.com/v0/b/duffy-264e6.appspot.com/o/shop_accessories%2Fball_shop.png?alt=media&token=a7ee0024-0d68-4197-be8d-8fd458072a8d",
+  ];
 
   void _incrementCounter() {
     setState(() {
@@ -89,9 +96,10 @@ class _Shop extends State<Shop> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Image(
-                                    image: NetworkImage(
-                                        "https://firebasestorage.googleapis.com/v0/b/duffy-264e6.appspot.com/o/shop_accessories%2Fumbrella_shop.png?alt=media&token=6eeff6b4-2c6d-4bdf-a8e9-35507390c3fe")),
+                                Image(
+                                    image: NetworkImage(accessoriesImages[index]),
+                                    width: 101,
+                                ),
                                 const SizedBox(width: 64),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
