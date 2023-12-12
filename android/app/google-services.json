@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "554147207548",
+    "project_id": "duffy-264e6",
+    "storage_bucket": "duffy-264e6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:554147207548:android:9c0c19013984baeb41acf9",
+        "android_client_info": {
+          "package_name": "com.example.proyecto_ddm2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDcFPBmbIldVoAJaNJjXsu1OnGpmUHS1Ms"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
