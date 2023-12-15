@@ -26,7 +26,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           children: <Widget>[
             const SizedBox(height: 10),
               Image.network(
-            'https://firebasestorage.googleapis.com/v0/b/recetas-7b16d.appspot.com/o/DALL_E_2023-12-12_02.01.43_-_A_minimalist__cute__2D__front-facing_yellow_duck_with_few_details__in_a_cartoon_style._The_image_should_have_a_transparent_background__and_the_duck_sh-removebg-preview.png?alt=media&token=32721578-741b-445b-8935-6083e0374263',
+            'https://firebasestorage.googleapis.com/v0/b/duffy-264e6.appspot.com/o/icons%2FLogoDUFFY.png?alt=media&token=bb619868-3f5a-4724-a9a6-794f03dd2127',
             height: 100,
             width: 100,        
           ),
