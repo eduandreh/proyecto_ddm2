@@ -2,17 +2,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:proyecto_ddm2/signup_register.dart';
+import 'package:proyecto_ddm2/homepage_screen.dart';
 
-Future <void> addDuffy(String name, String location, String color) async {
- CollectionReference recetasRef = FirebaseFirestore.instance.collection('duffy');
-  await recetasRef.add({
+Future<void> addDuffy(String name, String location, String color) async {
+  var userID = FirebaseAuth.instance.currentUser!.uid;
+
+  var duffyRef = FirebaseFirestore.instance.collection('duffy').doc(userID);
+
+  return duffyRef.set({
     'Nombre': name,
     'Ubicación': location,
     'Color': color,
-    'UserId': FirebaseAuth.instance.currentUser!.uid,
   });
-  
 }
 
 class DuckCreator extends StatefulWidget {
@@ -39,14 +40,15 @@ String getImageUrl(DuckColor color) {
   }
 }
 
-
+const List<String> cities = <String>['Alaska', 'Barcelona', 'Egipto', 'Los Angeles', 'Paris'];
 
 class _DuckCreatorState extends State<DuckCreator> {
   TextEditingController _duffyNameController = TextEditingController();
-  TextEditingController _duffyLocationController = TextEditingController();
+ // TextEditingController _duffyLocationController = TextEditingController();
   String userId = FirebaseAuth.instance.currentUser!.uid;
 
-  DuckColor _selectedColor = DuckColor.green; // Color inicial
+  DuckColor _selectedColor = DuckColor.yellow; 
+  String dropdownLocation = cities.first;
 
   void _setColor(DuckColor color) {
     setState(() {
@@ -142,21 +144,44 @@ class _DuckCreatorState extends State<DuckCreator> {
             ),
             const SizedBox(height: 20),
 
-            TextField(
-              obscureText: true,
-              controller: _duffyLocationController,
-              decoration: const InputDecoration(
-                hintText: 'Ubicación',
-                suffixIcon: Icon(Icons.location_on),
-                // filled: true,
-                // fillColor: Color.fromRGBO(221, 138, 41, 0.1),
-              ),
-            ),
+    DropdownButton<String>(
+      value: dropdownLocation,
+      elevation: 16,
+      
+      onChanged: (String? value) {
+        setState(() {
+          dropdownLocation = value!;
+        });
+      },
+      isExpanded: true,
+      items: cities.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList()
+    ),
+
+    //     DropdownMenu<String>(
+    //   initialSelection: cities.first,
+    //   onSelected: (String? value) {
+    //     setState(() {
+    //       dropdownValue = value!;
+    //     });
+    //   },
+    //   dropdownMenuEntries: cities.map<DropdownMenuEntry<String>>((String value) {
+    //     return DropdownMenuEntry<String>(value: value, label: value);
+    //   }).toList(),
+    // ),
             const SizedBox(height: 40),
             ElevatedButton(
                onPressed: () {
-                _createDuffy();
                 
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const HomePage()),
+                );
+                _createDuffy();
                },
                style: ElevatedButton.styleFrom(
                  primary: const Color.fromRGBO(221, 138, 41, 1),
@@ -185,17 +210,20 @@ class _DuckCreatorState extends State<DuckCreator> {
       ),
     );
   }
-_createDuffy() {
-    var name = _duffyNameController.text;
-    var location = _duffyLocationController.text;
-    var color = _selectedColor.toString();
-    if (name.isNotEmpty && location.isNotEmpty) {
-      addDuffy(name, location, color).then((value) {
-        Navigator.pop(context);
-      });
+void _createDuffy() async {
+  var name = _duffyNameController.text;
+  var location = dropdownLocation;
+  var color = getImageUrl(_selectedColor); 
+
+  if (name.isNotEmpty && location.isNotEmpty) {
+    try {
+      await addDuffy(name, location, color);
+    } catch (error) {
       
+      print('Error al crear o actualizar Duffy: $error');
     }
-  }
+  } 
+}
 }
 
 class Duffy {

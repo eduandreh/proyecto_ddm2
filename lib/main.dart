@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto_ddm2/firebase_options.dart';
+import 'package:proyecto_ddm2/homepage_screen.dart';
 import 'package:proyecto_ddm2/signin_screen.dart';
 
 void main() async {
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'DUFFY',
       theme: ThemeData(
     

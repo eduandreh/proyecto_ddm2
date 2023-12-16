@@ -53,7 +53,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               controller: _emailTextController,
               decoration: const InputDecoration(
                 hintText: 'Correo electrónico',
-                border: OutlineInputBorder(),
+              border: OutlineInputBorder(),
                 suffixIcon: Icon(Icons.email),
                 filled: true,
                 fillColor: Color.fromRGBO(221, 138, 41, 0.1),
@@ -67,8 +67,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
               decoration: const InputDecoration(
                 hintText: 'Contraseña',
                 border: OutlineInputBorder(),
-                suffixIcon: Icon(Icons.lock),
-                filled: true,
+            suffixIcon: Icon(Icons.lock),
+               filled: true,
                 fillColor: Color.fromRGBO(221, 138, 41, 0.1),
               ),
             ),
