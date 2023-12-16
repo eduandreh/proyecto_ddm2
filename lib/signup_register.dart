@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:proyecto_ddm2/signin_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import 'duck_creator_screen.dart';
+
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
 
@@ -107,7 +109,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 FirebaseAuth.instance.createUserWithEmailAndPassword(
                   email: _emailTextController.text,
                   password: _passwordTextController.text,
-                ).then((value) => Navigator.push(context, MaterialPageRoute(builder: (context) => const SignInScreen()))).catchError((error) {
+                ).then((value) => Navigator.push(context, MaterialPageRoute(builder: (context) => const DuckCreator()))).catchError((error) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('No se pudo crear la cuenta'),

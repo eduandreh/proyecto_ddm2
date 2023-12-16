@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto_ddm2/duck_creator_screen.dart';
 import 'package:proyecto_ddm2/homepage_screen.dart';
+import 'package:proyecto_ddm2/main_duck_screen.dart';
 import 'package:proyecto_ddm2/signup_register.dart';
 
 
@@ -75,7 +76,7 @@ TextEditingController _emailTextController = TextEditingController();
                 FirebaseAuth.instance.signInWithEmailAndPassword(
                   email: _emailTextController.text,
                   password: _passwordTextController.text,
-                ).then((value) => Navigator.push(context, MaterialPageRoute(builder: (context) => const DuckCreator()))).catchError((error) {
+                ).then((value) => Navigator.push(context, MaterialPageRoute(builder: (context) => const MainDuck()))).catchError((error) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('No se pudo iniciar sesión'),
