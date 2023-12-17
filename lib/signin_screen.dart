@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto_ddm2/duck_creator_screen.dart';
+import 'package:proyecto_ddm2/main_duck_screen.dart';
 import 'package:proyecto_ddm2/signup_register.dart';
 
 
@@ -28,8 +29,8 @@ TextEditingController _emailTextController = TextEditingController();
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             const SizedBox(height: 70),
-              Image.network(
-            'https://firebasestorage.googleapis.com/v0/b/duffy-264e6.appspot.com/o/icons%2FLogoDUFFY.png?alt=media&token=bb619868-3f5a-4724-a9a6-794f03dd2127',
+              Image(image:Image.asset("assets/placeholders/duckYellow.png").image,
+
             height: 100,
             width: 100,        
           ),
@@ -75,7 +76,7 @@ TextEditingController _emailTextController = TextEditingController();
                 FirebaseAuth.instance.signInWithEmailAndPassword(
                   email: _emailTextController.text,
                   password: _passwordTextController.text,
-                ).then((value) => Navigator.push(context, MaterialPageRoute(builder: (context) => const DuckCreator()))).catchError((error) {
+                ).then((value) => Navigator.push(context, MaterialPageRoute(builder: (context) => const MainDuck()))).catchError((error) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('No se pudo iniciar sesión'),
