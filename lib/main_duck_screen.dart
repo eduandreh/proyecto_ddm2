@@ -31,7 +31,6 @@ class _MainDuck extends State<MainDuck> {
   void getImages() async {
     backgroundImages = await fManager.getImagesURL("/backgrounds");
     ducks = await fManager.getImagesURL("/ducks/blue");
-    print(backgroundImages);
     setState(() {});
   }
 
@@ -46,7 +45,6 @@ class _MainDuck extends State<MainDuck> {
     return Scaffold(
       appBar: AppBar(
           centerTitle: true,
-          backgroundColor: Colors.red,
           leading: IconButton(
             onPressed: () {
               Navigator.pop(context);
