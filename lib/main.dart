@@ -1,7 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto_ddm2/firebase_options.dart';
-import 'package:proyecto_ddm2/homepage_screen.dart';
 import 'package:proyecto_ddm2/signin_screen.dart';
 import 'package:proyecto_ddm2/main_duck_screen.dart';
 
