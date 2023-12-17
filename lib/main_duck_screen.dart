@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:proyecto_ddm2/shop.dart';
 
 import 'firebase_manager.dart';
 
@@ -45,6 +46,7 @@ class _MainDuck extends State<MainDuck> {
     return Scaffold(
       appBar: AppBar(
           centerTitle: true,
+          backgroundColor: Colors.red,
           leading: IconButton(
             onPressed: () {
               Navigator.pop(context);
@@ -88,16 +90,13 @@ class _MainDuck extends State<MainDuck> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
             //weather icon
-            Container(
-              height: 0,
-              child: IconButton(
+            IconButton(
                 icon: const Icon(Icons.ac_unit_outlined),
                 color: Colors.orange,
                 onPressed: () {},
               ),
-            ),
 
-            const SizedBox(height: 32),
+            const SizedBox(height: 16),
             //progress bar
             Stack(
               children: <Widget>[
@@ -134,7 +133,6 @@ class _MainDuck extends State<MainDuck> {
                   fontWeight: FontWeight.bold,
                   fontSize: 32,
                 )),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -144,7 +142,7 @@ class _MainDuck extends State<MainDuck> {
                 Text(ducksLife.toString(),
                     style: const TextStyle(
                       fontWeight: FontWeight.w500,
-                      fontSize: 32,
+                      fontSize: 28,
                     )),
               ],
             ),
@@ -154,14 +152,14 @@ class _MainDuck extends State<MainDuck> {
                 Align(
                   alignment: Alignment.topCenter,
                   child: Image(  //weather icon
-                    image: NetworkImage(backgroundImages[0]),
+                    image: backgroundImages.isNotEmpty ? NetworkImage(backgroundImages[0]) : Image.asset('').image,
                     width: 400,
                   ),
                 ),
                 SizedBox(height: 350, child: Align(
                   alignment: Alignment.center,
                   child: Image(  //weather icon
-                    image: NetworkImage(ducks[3]),
+                    image: ducks.isNotEmpty ? NetworkImage(ducks[3]):Image.asset('').image,
                     width: 200,
                   ),
                 ),),
@@ -194,8 +192,9 @@ class _MainDuck extends State<MainDuck> {
                 )),
             IconButton(
               icon: const Icon(Icons.add_business),
-              color: Colors.white,
-              onPressed: () {},
+
+              color: Colors.orangeAccent,
+              onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => const Shop()));},
             ),
           ],
         ),
