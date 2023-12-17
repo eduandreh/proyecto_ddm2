@@ -9,13 +9,13 @@ class FirebaseManager {
 
   FirebaseStorage storage = FirebaseStorage.instance;
 
-  Future<String> checkUser(mail, password) async {
+  /*Future<String> checkUser(mail, password) async {
     String loginInfo = await signUp(mail, password);
     return loginInfo;
-  }
+  }*/
 
   //signUp
-  Future<String> signUp(mail, password) async {
+  /*Future<String> signUp(mail, password) async {
     //try catch
     try {
       await auth.createUserWithEmailAndPassword(
@@ -47,7 +47,7 @@ class FirebaseManager {
       return 'Wrong password provided for that user.';
     }
     return '';
-  }
+  }*/
 
 
   Future<List<String>> getImagesURL(folderPath) async {

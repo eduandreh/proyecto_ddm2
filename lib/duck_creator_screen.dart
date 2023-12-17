@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto_ddm2/homepage_screen.dart';
+import 'package:proyecto_ddm2/main_duck_screen.dart';
 
 Future<void> addDuffy(String name, String location, String color) async {
   var userID = FirebaseAuth.instance.currentUser!.uid;
@@ -179,7 +180,7 @@ class _DuckCreatorState extends State<DuckCreator> {
                 
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const HomePage()),
+                  MaterialPageRoute(builder: (context) => const MainDuck()),
                 );
                 _createDuffy();
                },
