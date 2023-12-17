@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:proyecto_ddm2/shop.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:proyecto_ddm2/duck_creator_screen.dart';
 
 import 'firebase_manager.dart';
 
@@ -42,6 +46,7 @@ class _MainDuck extends State<MainDuck> {
 
   @override
   Widget build(BuildContext context) {
+    var userId = FirebaseAuth.instance.currentUser!.uid;
     return Scaffold(
       appBar: AppBar(
           centerTitle: true,
@@ -83,18 +88,34 @@ class _MainDuck extends State<MainDuck> {
               ],
             )
           ]),
-      body: Center(
+      body: StreamBuilder<DocumentSnapshot>(
+        stream: FirebaseFirestore.instance.collection('duffy').doc(userId).snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator(); //inidicador de carga
+          }
+          if (snapshot.hasError) {
+            return Text('Error al cargar los datos');
+          }
+          if (snapshot.hasData && snapshot.data != null) {
+            Duffy duffy = Duffy.fromFirestore(snapshot.data!);
+
+            return Center(
           child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
             //weather icon
-            IconButton(
+            Container(
+              height: 0,
+              child: IconButton(
                 icon: const Icon(Icons.ac_unit_outlined),
                 color: Colors.orange,
                 onPressed: () {},
               ),
+            ),
 
-            const SizedBox(height: 16),
+
+            const SizedBox(height: 32),
             //progress bar
             Stack(
               children: <Widget>[
@@ -125,12 +146,13 @@ class _MainDuck extends State<MainDuck> {
               ],
             ),
 
-            const SizedBox(height: 24),
-            Text(ducksName,
+            const SizedBox(height: 10),
+            Text(duffy.name,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 32,
                 )),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -150,14 +172,14 @@ class _MainDuck extends State<MainDuck> {
                 Align(
                   alignment: Alignment.topCenter,
                   child: Image(  //weather icon
-                    image: backgroundImages.isNotEmpty ? NetworkImage(backgroundImages[0]) : Image.asset('').image,
+                    image: NetworkImage(backgroundImages[0]),
                     width: 400,
                   ),
                 ),
                 SizedBox(height: 350, child: Align(
                   alignment: Alignment.center,
                   child: Image(  //weather icon
-                    image: ducks.isNotEmpty ? NetworkImage(ducks[3]):Image.asset('').image,
+                    image: NetworkImage(duffy.outfit),
                     width: 200,
                   ),
                 ),),
@@ -176,7 +198,13 @@ class _MainDuck extends State<MainDuck> {
                     ))
               ],
             ),
-          ])),
+          ]));
+          } else {
+            return Text('No hay Duffy disponible');
+          }
+        },
+      ),
+
       bottomNavigationBar: BottomAppBar(
         color: const Color(0xffBBDBBC),
         child: Row(
@@ -190,7 +218,6 @@ class _MainDuck extends State<MainDuck> {
                 )),
             IconButton(
               icon: const Icon(Icons.add_business),
-
               color: Colors.orangeAccent,
               onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => const Shop()));},
             ),
