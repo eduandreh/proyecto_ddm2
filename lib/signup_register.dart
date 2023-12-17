@@ -21,6 +21,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
         padding: const EdgeInsets.all(40),
         child: Column(
@@ -28,7 +29,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           children: <Widget>[
             const SizedBox(height: 10),
               Image.network(
-            'https://firebasestorage.googleapis.com/v0/b/duffy-264e6.appspot.com/o/icons%2FLogoDUFFY.png?alt=media&token=bb619868-3f5a-4724-a9a6-794f03dd2127',
+            'https://firebasestorage.googleapis.com/v0/b/duffy-264e6.appspot.com/o/plainDucks%2FLogoDUFFY.png?alt=media&token=7623a616-167f-4e25-a4fc-346455d4b642',
             height: 100,
             width: 100,        
           ),
