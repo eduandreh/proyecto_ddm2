@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> {
             Duffy duffy = Duffy.fromFirestore(snapshot.data!);
             return Column(
               children: [
-                Image.network(duffy.color),
+                Image.network(duffy.outfit),
                 Text(duffy.name),
                 Text(duffy.location),
               ],
