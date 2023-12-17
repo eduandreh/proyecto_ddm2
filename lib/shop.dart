@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Shop extends StatefulWidget {
-  const Shop({super.key, required this.title});
-
-  final String title;
+  const Shop({super.key});
 
   @override
   State<Shop> createState() => _Shop();
@@ -41,7 +39,9 @@ class _Shop extends State<Shop> {
         appBar: AppBar(
             centerTitle: true,
             leading: BackButton(
-              onPressed: _incrementCounter,
+              onPressed: () {
+                Navigator.pop(context);
+              },
               color: Colors.black,
             ),
             title: Row(
