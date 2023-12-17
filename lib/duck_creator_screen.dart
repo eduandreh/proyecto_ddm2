@@ -2,18 +2,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:proyecto_ddm2/homepage_screen.dart';
 import 'package:proyecto_ddm2/main_duck_screen.dart';
 
-Future<void> addDuffy(String name, String location, String color) async {
+Future<void> addDuffy(String name, String location, String outfit, double coins, double duckiness, double life) async {
   var userID = FirebaseAuth.instance.currentUser!.uid;
 
   var duffyRef = FirebaseFirestore.instance.collection('duffy').doc(userID);
 
   return duffyRef.set({
-    'Nombre': name,
-    'Ubicación': location,
-    'Color': color,
+    'Name': name,
+    'Location': location,
+    'Outfit': outfit,
+    'Coins': coins,
+    'Duckiness': duckiness,
+    'Life': life,
   });
 }
 
@@ -26,8 +28,8 @@ class DuckCreator extends StatefulWidget {
 
 enum DuckColor { yellow, purple, blue, green }
 
-String getImageUrl(DuckColor color) {
-  switch (color) {
+String getImageUrl(DuckColor outfit) {
+  switch (outfit) {
     case DuckColor.yellow:
       return 'https://firebasestorage.googleapis.com/v0/b/duffy-264e6.appspot.com/o/plainDucks%2FduckYellow.png?alt=media&token=37019781-6f79-4086-9e8b-1dc3893bf8e0';
     case DuckColor.purple:
@@ -45,20 +47,21 @@ const List<String> cities = <String>['Alaska', 'Barcelona', 'Egipto', 'Los Angel
 
 class _DuckCreatorState extends State<DuckCreator> {
   TextEditingController _duffyNameController = TextEditingController();
- // TextEditingController _duffyLocationController = TextEditingController();
+
   String userId = FirebaseAuth.instance.currentUser!.uid;
 
   DuckColor _selectedColor = DuckColor.yellow; 
   String dropdownLocation = cities.first;
 
-  void _setColor(DuckColor color) {
+  void _setColor(DuckColor outfit) {
     setState(() {
-      _selectedColor = color;
+      _selectedColor = outfit;
     });
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
         padding: const EdgeInsets.all(40),
         child: Column(
@@ -214,34 +217,15 @@ class _DuckCreatorState extends State<DuckCreator> {
 void _createDuffy() async {
   var name = _duffyNameController.text;
   var location = dropdownLocation;
-  var color = getImageUrl(_selectedColor); 
+  var outfit = getImageUrl(_selectedColor);
 
   if (name.isNotEmpty && location.isNotEmpty) {
     try {
-      await addDuffy(name, location, color);
+      await addDuffy(name, location, outfit, 0.0, 100.0, 0.0);
     } catch (error) {
       
       print('Error al crear o actualizar Duffy: $error');
     }
   } 
 }
-}
-
-class Duffy {
-  final String name;
-  final String location;
-  final String color;
-
-  Duffy({required this.name, required this.location, required this.color});
-
-  factory Duffy.fromFirestore(DocumentSnapshot doc) {
-    Map data = doc.data() as Map<String, dynamic>;
-    return Duffy(
-      
-    //id: doc.id,
-      name: data['Nombre'],
-      location: data['Ubicación'],
-      color: data['Color']
-    );
-  }
 }
