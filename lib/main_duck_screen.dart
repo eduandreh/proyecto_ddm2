@@ -1,11 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto_ddm2/duck_creator_screen.dart';
 import 'package:proyecto_ddm2/shop.dart';
-import 'package:proyecto_ddm2/signin_screen.dart';
-import 'package:proyecto_ddm2/weather_api_manager.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'Duffy.dart';
+
 import 'firebase_manager.dart';
 
 class MainDuck extends StatefulWidget {
@@ -20,33 +18,28 @@ class MainDuck extends StatefulWidget {
 
 class _MainDuck extends State<MainDuck> {
   int _counter = 0;
-  double _duckiness = 0.7; //from firebase
-  String ducksName = "Donald"; //from firebase
-  int ducksLife = 654; //from firebase
+  // double _duckiness = 0.7; //from firebase
+  // String ducksName = "Donald"; //from firebase
+  // int ducksLife = 654; //from firebase
   List<String>backgroundImages =[];
-
+  List<String>ducks=[];
   FirebaseManager fManager = FirebaseManager();
 
   @override
   void initState() {
     super.initState();
-    getCurrentWeather(48.856613, 2.352222); //need duck's location
     getImages();
   }
 
   void getImages() async {
     backgroundImages = await fManager.getImagesURL("/backgrounds");
+    ducks = await fManager.getImagesURL("/ducks/blue");
     setState(() {});
   }
 
   void _incrementSwipes() {
     setState(() {
-      _swipes++;
-      if(_swipes == 10) {
-        fManager.updateDuckinessWithSwipes();
-        //fManager.updateDuckinessWithSwipes(duck.duckiness);
-        _swipes = 0;
-      }
+      _counter++;
     });
   }
 
@@ -58,13 +51,13 @@ class _MainDuck extends State<MainDuck> {
           centerTitle: true,
           leading: IconButton(
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const SignInScreen()));
+              Navigator.pop(context);
             },
             icon: const Icon(Icons.logout_rounded, color: Color(0xffDD8A29)),
           ),
           leadingWidth: 50,
           title: const Text(
-            "Alaska",
+            "Denver",
             style: TextStyle(fontSize: 18, color: Color(0xff7e7e7e)),
           ),
           actions: [
@@ -107,20 +100,17 @@ class _MainDuck extends State<MainDuck> {
             Duffy duffy = Duffy.fromFirestore(snapshot.data!);
 
             return Center(
+          child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
             //weather icon
-            Container(
-              height: 0,
-              child: IconButton(
+            IconButton(
                 icon: const Icon(Icons.ac_unit_outlined),
                 color: Colors.orange,
                 onPressed: () {},
               ),
-            ),
 
-
-            const SizedBox(height: 32),
+            const SizedBox(height: 16),
             //progress bar
             Stack(
               children: <Widget>[
@@ -130,7 +120,7 @@ class _MainDuck extends State<MainDuck> {
                     width: 300,
                     height: 30,
                     child: LinearProgressIndicator(
-                      value: _duckiness,
+                      value: duffy.duckiness,
                       backgroundColor: Colors.grey[300],
                       valueColor: const AlwaysStoppedAnimation<Color>(
                           Color(0xffDD8A29)),
@@ -157,7 +147,6 @@ class _MainDuck extends State<MainDuck> {
                   fontWeight: FontWeight.bold,
                   fontSize: 32,
                 )),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -171,8 +160,6 @@ class _MainDuck extends State<MainDuck> {
                     )),
               ],
             ),
-            Visibility(visible: NetworkImage(duffy.outfit).url.isEmpty && backgroundImages.isEmpty ? true: false,
-              child: Image(image: Image.asset("assets/placeholders/duck_placeHolder.png").image)),
 
             Stack(
               children: <Widget>[
@@ -186,7 +173,7 @@ class _MainDuck extends State<MainDuck> {
                 SizedBox(height: 350, child: Align(
                   alignment: Alignment.center,
                   child: Image(  //weather icon
-                    image: ducks.isNotEmpty ? NetworkImage(ducks[3]):Image.asset('').image,
+                    image: ducks.isNotEmpty ? NetworkImage(duffy.outfit):Image.asset('').image,
                     width: 200,
                   ),
                 ),),
@@ -205,7 +192,12 @@ class _MainDuck extends State<MainDuck> {
                     ))
               ],
             ),
-          ])),
+          ]));
+          } else {
+            return Text('No hay datos');
+          }
+        },
+      ),
       bottomNavigationBar: BottomAppBar(
         color: const Color(0xffBBDBBC),
         child: Row(
@@ -219,6 +211,7 @@ class _MainDuck extends State<MainDuck> {
                 )),
             IconButton(
               icon: const Icon(Icons.add_business),
+
               color: Colors.orangeAccent,
               onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => const Shop()));},
             ),
