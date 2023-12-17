@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'firebase_manager.dart';
 
 class Shop extends StatefulWidget {
   const Shop({super.key});
@@ -11,21 +12,28 @@ class _Shop extends State<Shop> {
 
   int _counter = 950;
 
-  List<String> accessoriesImages = [
-    "https://firebasestorage.googleapis.com/v0/b/duffy-264e6.appspot.com/o/shop_accessoriesV2%2Fumbrella.png?alt=media&token=4d5c16ee-b01f-4172-9ad3-b10f36a59bbb",
-    "https://firebasestorage.googleapis.com/v0/b/duffy-264e6.appspot.com/o/shop_accessoriesV2%2Fsunglasses2.png?alt=media&token=117759c0-8fc8-4896-82fa-bdcaf5e63d95",
-    "https://firebasestorage.googleapis.com/v0/b/duffy-264e6.appspot.com/o/shop_accessoriesV2%2Fscarf.png?alt=media&token=9350b355-9090-4d6d-baed-578feedf90b4",
-    "https://firebasestorage.googleapis.com/v0/b/duffy-264e6.appspot.com/o/shop_accessoriesV2%2Fhat.png?alt=media&token=fcc3520d-a72a-464d-85e6-aa4c280f558c",
-    "https://firebasestorage.googleapis.com/v0/b/duffy-264e6.appspot.com/o/shop_accessoriesV2%2Fball.png?alt=media&token=08932950-6a1a-4936-a4da-77e04b930cdc",
-  ];
+  List<String>? accessoriesImages = [];
+  FirebaseManager fManager = FirebaseManager();
 
   List<String> weatherIcons = [
-    "https://firebasestorage.googleapis.com/v0/b/duffy-264e6.appspot.com/o/icons%2Frain_icon.png?alt=media&token=4a539845-c931-42b5-826a-70c11b70ffb6",
-    "https://firebasestorage.googleapis.com/v0/b/duffy-264e6.appspot.com/o/icons%2Fhot_icon.png?alt=media&token=14b61246-9db1-46dc-892b-5f66e689252f",
-    "https://firebasestorage.googleapis.com/v0/b/duffy-264e6.appspot.com/o/icons%2Fsnow_icon.png?alt=media&token=d81c247a-13e8-4912-8025-272839f9dfb5",
-    "https://firebasestorage.googleapis.com/v0/b/duffy-264e6.appspot.com/o/icons%2Fwind_icon.png?alt=media&token=ebd1728c-c54e-4272-9682-e5e97c02267d",
-    "https://firebasestorage.googleapis.com/v0/b/duffy-264e6.appspot.com/o/icons%2Ftornado_icon.png?alt=media&token=1a16ef41-cf25-493b-96ac-fcd0a5d945f6",
+    'assets/weather/1rain_icon.png',
+    'assets/weather/2hot_icon.png',
+    'assets/weather/3snow_icon.png',
+    'assets/weather/4wind_icon.png',
+    'assets/weather/5tornado_icon.png',
+    'assets/weather/6sun_icon.png',
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    getImages();
+  }
+
+  void getImages() async {
+    accessoriesImages = await fManager.getImagesURL("/shop_accessories/");
+    setState(() {});
+  }
 
   void _incrementCounter() {
     setState(() {
@@ -105,7 +113,7 @@ class _Shop extends State<Shop> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Image(
-                            image: NetworkImage(accessoriesImages[index]),
+                            image: accessoriesImages!.isNotEmpty ? NetworkImage(accessoriesImages![index]) : const NetworkImage("https://firebasestorage.googleapis.com/v0/b/duffy-264e6.appspot.com/o/shop_accessories%2F1umbrella.png?alt=media&token=57da99d1-bbce-43f4-a435-3b1b5ac4dd9e"),
                             width: 101,
                           ),
                           const SizedBox(width: 64),
@@ -116,7 +124,7 @@ class _Shop extends State<Shop> {
                                 children: [
                                   const SizedBox(width: 12),
                                   Image(  //weather icon
-                                    image: NetworkImage(weatherIcons[index]),
+                                    image: Image.asset(weatherIcons[index]).image,
                                     width: 24,
                                   ),
                                   const SizedBox(width: 30),
@@ -147,12 +155,11 @@ class _Shop extends State<Shop> {
                                     backgroundColor: MaterialStatePropertyAll(
                                         Color(0xff236A26)),
                                   ),
-                                  child: const Row(children: [
-                                    Text("Comprar"),
-                                    SizedBox(width: 4),
+                                  child: Row(children: [
+                                    const Text("Comprar"),
+                                    const SizedBox(width: 4),
                                     Image(  //shopping cart icon
-                                      image: NetworkImage(
-                                          "https://firebasestorage.googleapis.com/v0/b/duffy-264e6.appspot.com/o/icons%2Fshopping_cart.png?alt=media&token=9e736d31-575c-4ab7-bc7d-fe9ed3c9d2d7"),
+                                      image: Image.asset("assets/icons/shopping_cart.png").image,
                                       width: 24,
                                     ),
                                   ]))
