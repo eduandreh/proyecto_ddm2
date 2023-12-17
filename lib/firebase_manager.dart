@@ -52,13 +52,12 @@ class FirebaseManager {
 
   Future<List<String>> getImagesURL(folderPath) async {
 
+    print("entro!!!!!");
     // Get a reference to the folder
     Reference folderRef = storage.ref().child(folderPath);
     List<String> urlList = [];
 
-    try {
-
-      ListResult result = await folderRef.listAll();
+    ListResult result = await folderRef.listAll();
 
       for (Reference item in result.items) {
         String downloadURL = await item.getDownloadURL();
@@ -66,9 +65,6 @@ class FirebaseManager {
         urlList.add(downloadURL);
       }
 
-    } catch (e) {
-      print(e);
-    }
     return urlList;
   }
 
