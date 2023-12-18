@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:proyecto_ddm2/DuffyAccessory.dart';
 
+import 'Duffy.dart';
 import 'Shop.dart';
 
 class FirebaseManager {
@@ -13,8 +14,6 @@ class FirebaseManager {
   FirebaseStorage storage = FirebaseStorage.instance;
 
   Future<List<String>> getImagesURL(folderPath) async {
-
-    print("entro!!!!!");
     // Get a reference to the folder
     Reference folderRef = storage.ref().child(folderPath);
     List<String> urlList = [];
@@ -74,5 +73,16 @@ class FirebaseManager {
   void getCoordsByCity(){
 
   }
+
+  Future<Duffy> getDuck() async {
+    var userId = auth.currentUser!.uid;
+
+    Duffy duffy;
+    final doc = await db.collection("duffy").doc(userId).get();
+    duffy = Duffy.fromFirestore(doc);
+
+    return duffy;
+  }
+
 
 }
