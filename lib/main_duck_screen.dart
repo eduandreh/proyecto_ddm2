@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:proyecto_ddm2/duck_creator_screen.dart';
 import 'package:proyecto_ddm2/shop.dart';
 
 import 'firebase_manager.dart';
@@ -15,9 +18,9 @@ class MainDuck extends StatefulWidget {
 
 class _MainDuck extends State<MainDuck> {
   int _counter = 0;
-  double _duckiness = 0.7; //from firebase
-  String ducksName = "Donald"; //from firebase
-  int ducksLife = 654; //from firebase
+  // double _duckiness = 0.7; //from firebase
+  // String ducksName = "Donald"; //from firebase
+  // int ducksLife = 654; //from firebase
   List<String>backgroundImages =[];
   List<String>ducks=[];
   FirebaseManager fManager = FirebaseManager();
@@ -42,6 +45,7 @@ class _MainDuck extends State<MainDuck> {
 
   @override
   Widget build(BuildContext context) {
+    var userId = FirebaseAuth.instance.currentUser!.uid;
     return Scaffold(
       appBar: AppBar(
           centerTitle: true,
@@ -83,7 +87,19 @@ class _MainDuck extends State<MainDuck> {
               ],
             )
           ]),
-      body: Center(
+      body: StreamBuilder<DocumentSnapshot>(
+        stream: FirebaseFirestore.instance.collection('duffy').doc(userId).snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator(); //inidicador de carga
+          }
+          if (snapshot.hasError) {
+            return Text('Error al cargar los datos');
+          }
+          if (snapshot.hasData && snapshot.data != null) {
+            Duffy duffy = Duffy.fromFirestore(snapshot.data!);
+
+            return Center(
           child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
@@ -104,7 +120,7 @@ class _MainDuck extends State<MainDuck> {
                     width: 300,
                     height: 30,
                     child: LinearProgressIndicator(
-                      value: _duckiness,
+                      value: duffy.duckiness,
                       backgroundColor: Colors.grey[300],
                       valueColor: const AlwaysStoppedAnimation<Color>(
                           Color(0xffDD8A29)),
@@ -125,8 +141,8 @@ class _MainDuck extends State<MainDuck> {
               ],
             ),
 
-            const SizedBox(height: 24),
-            Text(ducksName,
+            const SizedBox(height: 10),
+            Text(duffy.name,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 32,
@@ -137,7 +153,7 @@ class _MainDuck extends State<MainDuck> {
                 const Text("D",
                     style: TextStyle(fontSize: 24, color: Color(0xff9C4615))),
                 const SizedBox(width: 12),
-                Text(ducksLife.toString(),
+                Text(duffy.life.toString(),
                     style: const TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 28,
@@ -157,7 +173,7 @@ class _MainDuck extends State<MainDuck> {
                 SizedBox(height: 350, child: Align(
                   alignment: Alignment.center,
                   child: Image(  //weather icon
-                    image: ducks.isNotEmpty ? NetworkImage(ducks[3]):Image.asset('').image,
+                    image: ducks.isNotEmpty ? NetworkImage(duffy.outfit):Image.asset('').image,
                     width: 200,
                   ),
                 ),),
@@ -176,7 +192,12 @@ class _MainDuck extends State<MainDuck> {
                     ))
               ],
             ),
-          ])),
+          ]));
+          } else {
+            return Text('No hay datos');
+          }
+        },
+      ),
       bottomNavigationBar: BottomAppBar(
         color: const Color(0xffBBDBBC),
         child: Row(

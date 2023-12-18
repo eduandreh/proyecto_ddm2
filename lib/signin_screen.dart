@@ -1,9 +1,7 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto_ddm2/duck_creator_screen.dart';
-import 'package:proyecto_ddm2/homepage_screen.dart';
 import 'package:proyecto_ddm2/main_duck_screen.dart';
 import 'package:proyecto_ddm2/signup_register.dart';
 
@@ -23,6 +21,7 @@ TextEditingController _emailTextController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
         padding: const EdgeInsets.all(40),
         child: Column(
@@ -30,7 +29,7 @@ TextEditingController _emailTextController = TextEditingController();
           children: <Widget>[
             const SizedBox(height: 70),
               Image.network(
-            'https://firebasestorage.googleapis.com/v0/b/duffy-264e6.appspot.com/o/icons%2FLogoDUFFY.png?alt=media&token=bb619868-3f5a-4724-a9a6-794f03dd2127',
+            'https://firebasestorage.googleapis.com/v0/b/duffy-264e6.appspot.com/o/plainDucks%2FLogoDUFFY.png?alt=media&token=7623a616-167f-4e25-a4fc-346455d4b642',
             height: 100,
             width: 100,        
           ),
@@ -76,7 +75,7 @@ TextEditingController _emailTextController = TextEditingController();
                 FirebaseAuth.instance.signInWithEmailAndPassword(
                   email: _emailTextController.text,
                   password: _passwordTextController.text,
-                ).then((value) => Navigator.push(context, MaterialPageRoute(builder: (context) => const MainDuck()))).catchError((error) {
+                ).then((value) => Navigator.push(context, MaterialPageRoute(builder: (context) => const DuckCreator()))).catchError((error) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('No se pudo iniciar sesión'),

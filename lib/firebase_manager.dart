@@ -46,7 +46,6 @@ class FirebaseManager {
 
     return shopObjects;
   }
-
   void updateDuckinessWithSwipes() {
     //get ducks duckiness
 
@@ -55,8 +54,5 @@ class FirebaseManager {
   void getCoordsByCity(){
 
   }
-//get coords by city name
-
-
 
 }
