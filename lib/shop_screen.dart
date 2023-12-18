@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:proyecto_ddm2/DuffyAccessory.dart';
 import 'package:proyecto_ddm2/Shop.dart';
 import 'firebase_manager.dart';
 
@@ -13,6 +14,7 @@ class _ShopScreen extends State<ShopScreen> {
   int _counter = 950;
 
   List<Shop> shopObjects = [];
+  List<DuffyAccessory> duffyObjects = [];
   FirebaseManager fManager = FirebaseManager();
 
   List<String> weatherIcons = [
@@ -31,8 +33,9 @@ class _ShopScreen extends State<ShopScreen> {
   }
 
   void getInfo() async {
-    //shopObjects = await fManager.getShop();
-    shopObjects = [];
+    shopObjects = await fManager.getShop();
+    duffyObjects = await fManager.getDefaultAccessories();
+    //shopObjects = [];
     setState(() {});
   }
 
@@ -102,7 +105,7 @@ class _ShopScreen extends State<ShopScreen> {
                 visible: shopObjects.isEmpty,
                 child: Image(
                   image: Image.asset(  //placeholder
-                      "assets/weather/6sun_icon.png")
+                      "assets/placeholders/duck_shop_placeHolder.png")
                       .image,
                   width: 400,
                 ),
@@ -171,9 +174,8 @@ class _ShopScreen extends State<ShopScreen> {
                                 ),
                                 FilledButton(
                                     onPressed: _incrementCounter,
-                                    style: const ButtonStyle(
-                                      backgroundColor: MaterialStatePropertyAll(
-                                          Color(0xff236A26)),
+                                    style: ButtonStyle(
+                                      backgroundColor: duffyObjects[index].sold ? const MaterialStatePropertyAll(Colors.grey) : const MaterialStatePropertyAll(Color(0xff236A26)),
                                     ),
                                     child: Row(children: [
                                       const Text("Comprar"),
