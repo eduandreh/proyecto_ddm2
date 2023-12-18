@@ -5,7 +5,6 @@ import 'package:proyecto_ddm2/duck_creator_screen.dart';
 import 'package:proyecto_ddm2/main_duck_screen.dart';
 import 'package:proyecto_ddm2/signup_register.dart';
 
-
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
 
@@ -14,9 +13,8 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
-TextEditingController _passwordTextController = TextEditingController();
-TextEditingController _emailTextController = TextEditingController();
-
+  TextEditingController _passwordTextController = TextEditingController();
+  TextEditingController _emailTextController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -27,12 +25,13 @@ TextEditingController _emailTextController = TextEditingController();
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            const SizedBox(height: 70),
-              Image.network(
-            'https://firebasestorage.googleapis.com/v0/b/duffy-264e6.appspot.com/o/plainDucks%2FLogoDUFFY.png?alt=media&token=7623a616-167f-4e25-a4fc-346455d4b642',
-            height: 100,
-            width: 100,        
-          ),
+            SizedBox(
+              height: 200,
+              child: Image(
+                  image: Image.asset("assets/placeholders/duckYellow.png").image,
+                  height: 100,
+                  width: 100),
+            ),
             const Text(
               'Bienvenid@!',
               style: TextStyle(
@@ -58,7 +57,6 @@ TextEditingController _emailTextController = TextEditingController();
               ),
             ),
             const SizedBox(height: 20),
-
             TextField(
               obscureText: true,
               controller: _passwordTextController,
@@ -71,27 +69,31 @@ TextEditingController _emailTextController = TextEditingController();
             ),
             const SizedBox(height: 40),
             ElevatedButton(
-               onPressed: () {
-                FirebaseAuth.instance.signInWithEmailAndPassword(
-                  email: _emailTextController.text,
-                  password: _passwordTextController.text,
-                ).then((value) => Navigator.push(context, MaterialPageRoute(builder: (context) => const DuckCreator()))).catchError((error) {
+              onPressed: () {
+                FirebaseAuth.instance
+                    .signInWithEmailAndPassword(
+                      email: _emailTextController.text,
+                      password: _passwordTextController.text,
+                    )
+                    .then((value) => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const DuckCreator())))
+                    .catchError((error) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('No se pudo iniciar sesión'),
                     ),
                   );
-                 });
-                
-               },
-               style: ElevatedButton.styleFrom(
-                 primary: const Color.fromRGBO(221, 138, 41, 1),
-                 onPrimary: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                   
-               ),
+                });
+              },
+              style: ElevatedButton.styleFrom(
+                primary: const Color.fromRGBO(221, 138, 41, 1),
+                onPrimary: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+              ),
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 alignment: Alignment.center,
