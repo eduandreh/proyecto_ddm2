@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:proyecto_ddm2/DuffyAccessory.dart';
 
 class Duffy {
   final String name;
@@ -7,6 +8,7 @@ class Duffy {
   final double coins;
   final double life;
   final double duckiness;
+
 
   Duffy(
       {required this.name, required this.location, required this.outfit, required this.coins, required this.life, required this.duckiness});

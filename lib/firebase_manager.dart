@@ -27,6 +27,47 @@ class FirebaseManager {
     return urlList;
   }
 
+<<<<<<< Updated upstream
+=======
+  Future<List<Shop>> getShop() async {
+    List<Shop> shopObjects = [];
+
+    final ref = db.collection("shop").withConverter(
+        fromFirestore: Shop.fromFirestore,
+        toFirestore: (Shop shop, _) => shop.toFirestore());
+
+    var querySnapshot = await ref.get();
+
+    for (var snapshot in querySnapshot.docs) {
+      if (snapshot != null) {
+        shopObjects.add(snapshot.data());
+      }
+    }
+
+    return shopObjects;
+  }
+
+  Future<List<DuffyAccessory>> getDefaultAccessories() async {
+    List<DuffyAccessory> duffyAccessories = [];
+
+    final ref = db.collection("accessories").withConverter(
+        fromFirestore: DuffyAccessory.fromFirestore,
+        toFirestore: (DuffyAccessory duffyAccessory, _) => duffyAccessory.toFirestore());
+
+    var querySnapshot = await ref.get();
+
+    for (var snapshot in querySnapshot.docs) {
+      if (snapshot != null) {
+        duffyAccessories.add(snapshot.data());
+      }
+    }
+
+    return duffyAccessories;
+  }
+
+
+
+>>>>>>> Stashed changes
   void updateDuckinessWithSwipes() {
     //get ducks duckiness
 
