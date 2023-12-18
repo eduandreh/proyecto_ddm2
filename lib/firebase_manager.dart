@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:proyecto_ddm2/DuffyAccessory.dart';
 
 import 'Shop.dart';
 
@@ -46,6 +47,25 @@ class FirebaseManager {
 
     return shopObjects;
   }
+
+  Future<List<DuffyAccessory>> getDefaultAccessories() async {
+    List<DuffyAccessory> duffyAccessories = [];
+
+    final ref = db.collection("accessories").withConverter(
+        fromFirestore: DuffyAccessory.fromFirestore,
+        toFirestore: (DuffyAccessory duffyAccessory, _) => duffyAccessory.toFirestore());
+
+    var querySnapshot = await ref.get();
+
+    for (var snapshot in querySnapshot.docs) {
+      if (snapshot != null) {
+        duffyAccessories.add(snapshot.data());
+      }
+    }
+
+    return duffyAccessories;
+  }
+
   void updateDuckinessWithSwipes() {
     //get ducks duckiness
 
