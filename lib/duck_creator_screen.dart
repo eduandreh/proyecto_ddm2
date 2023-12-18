@@ -2,13 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:proyecto_ddm2/DuffyAccessory.dart';
+import 'package:proyecto_ddm2/firebase_manager.dart';
 import 'package:proyecto_ddm2/main_duck_screen.dart';
 
-Future<void> addDuffy(String name, String location, String outfit, double coins, double duckiness, double life) async {
+Future<void> addDuffy(String name, String location, String outfit, double coins, double duckiness, double life, List<DuffyAccessory> accessories) async {
   var userID = FirebaseAuth.instance.currentUser!.uid;
-
   var duffyRef = FirebaseFirestore.instance.collection('duffy').doc(userID);
 
+ var accessoriesMap = accessories.map((accessory) => accessory.toFirestore()).toList();
   return duffyRef.set({
     'Name': name,
     'Location': location,
@@ -16,8 +18,10 @@ Future<void> addDuffy(String name, String location, String outfit, double coins,
     'Coins': coins,
     'Duckiness': duckiness,
     'Life': life,
+    'Accessories': accessoriesMap,  
   });
 }
+
 
 class DuckCreator extends StatefulWidget {
   const DuckCreator({super.key});
@@ -218,10 +222,16 @@ void _createDuffy() async {
   var name = _duffyNameController.text;
   var location = dropdownLocation;
   var outfit = getImageUrl(_selectedColor); 
+  
 
   if (name.isNotEmpty && location.isNotEmpty) {
     try {
-      await addDuffy(name, location, outfit, 0.0, 100.0, 0.0);
+      FirebaseManager fManager = FirebaseManager();
+      List<DuffyAccessory> defaultAccessories = await fManager.getDefaultAccessories();
+
+       print('Accesorios ${defaultAccessories[0].name}');
+
+      await addDuffy(name, location, outfit, 0.0, 100.0, 0.0, defaultAccessories);
     } catch (error) {
       
       print('Error al crear o actualizar Duffy: $error');
@@ -232,25 +242,51 @@ void _createDuffy() async {
 
 
 
-class Duffy {
-  final String name;
-  final String location;
-  final String outfit;
-  final double coins;
-  final double life;
-  final double duckiness;
+// class Duffy {
+//   final String name;
+//   final String location;
+//   final String outfit;
+//   final double coins;
+//   final double life;
+//   final double duckiness;
 
-  Duffy({required this.name, required this.location, required this.outfit, required this.coins, required this.life, required this.duckiness});
+//   Duffy({required this.name, required this.location, required this.outfit, required this.coins, required this.life, required this.duckiness});
 
-  factory Duffy.fromFirestore(DocumentSnapshot doc) {
-  Map data = doc.data() as Map<String, dynamic>;
-  return Duffy(
-    name: data['Name'] ?? '', 
-    location: data['Location'] ?? '',
-    outfit: data['Outfit'] ?? '',
-    coins: data['Coins']?.toDouble() ?? 0.0, 
-    life: data['Life']?.toDouble() ?? 100.0,
-    duckiness: data['Duckiness']?.toDouble() ?? 0.0,
-  );
-}
-}
+//   factory Duffy.fromFirestore(DocumentSnapshot doc) {
+//   Map data = doc.data() as Map<String, dynamic>;
+//   return Duffy(
+//     name: data['Name'] ?? '', 
+//     location: data['Location'] ?? '',
+//     outfit: data['Outfit'] ?? '',
+//     coins: data['Coins']?.toDouble() ?? 0.0, 
+//     life: data['Life']?.toDouble() ?? 100.0,
+//     duckiness: data['Duckiness']?.toDouble() ?? 0.0,
+//   );
+// }
+// }
+
+// Future<void> addDuffy(
+//   String name,
+//   String location,
+//   String outfit,
+//   double coins,
+//   double duckiness,
+//   double life,
+//   List<DuffyAccessory> accessories
+// ) async {
+//   var userID = FirebaseAuth.instance.currentUser!.uid;
+//   var duffyRef = FirebaseFirestore.instance.collection('duffy').doc(userID);
+
+//   // Convierte cada DuffyAccessory en un mapa
+//   var accessoriesMap = accessories.map((accessory) => accessory.toFirestore()).toList();
+
+//   return duffyRef.set({
+//     'Name': name,
+//     'Location': location,
+//     'Outfit': outfit,
+//     'Coins': coins,
+//     'Duckiness': duckiness,
+//     'Life': life,
+//     'Accessories': accessoriesMap, // Agrega la lista de accesorios como mapa
+//   });
+// }
