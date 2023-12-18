@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
+import 'Shop.dart';
+
 class FirebaseManager {
 
   FirebaseFirestore db = FirebaseFirestore.instance;
@@ -27,6 +29,23 @@ class FirebaseManager {
     return urlList;
   }
 
+  Future<List<Shop>> getShop() async {
+    List<Shop> shopObjects = [];
+
+    final ref = db.collection("shop").withConverter(
+        fromFirestore: Shop.fromFirestore,
+        toFirestore: (Shop shop, _) => shop.toFirestore());
+
+    var querySnapshot = await ref.get();
+
+    for (var snapshot in querySnapshot.docs) {
+      if (snapshot != null) {
+        shopObjects.add(snapshot.data());
+      }
+    }
+
+    return shopObjects;
+  }
   void updateDuckinessWithSwipes() {
     //get ducks duckiness
 
@@ -35,6 +54,5 @@ class FirebaseManager {
   void getCoordsByCity(){
 
   }
-  //get coords by city name
 
 }
