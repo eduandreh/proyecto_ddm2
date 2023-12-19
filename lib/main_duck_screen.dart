@@ -9,8 +9,6 @@ class MainDuck extends StatefulWidget {
   //needs to get duck object from login
   const MainDuck({super.key});
 
-  //const MainDuck({super.key, required Duck duck});
-
   @override
   State<MainDuck> createState() => _MainDuck();
 }
@@ -87,7 +85,7 @@ class _MainDuck extends State<MainDuck> {
                 ),
                 const SizedBox(width: 2),
                 Text(
-                  _duffy != null ? "000" : _duffy!.coins.toString(),
+                  _duffy == null ? "000" : _duffy!.coins.toString(),
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,

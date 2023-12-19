@@ -78,7 +78,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     .then((value) => Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const DuckCreator())))
+                            builder: (context) => const MainDuck())))
                     .catchError((error) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
