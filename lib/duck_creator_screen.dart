@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto_ddm2/DuffyAccessory.dart';
 import 'package:proyecto_ddm2/firebase_manager.dart';
+import 'package:proyecto_ddm2/DuffyAccessory.dart';
+import 'package:proyecto_ddm2/firebase_manager.dart';
 import 'package:proyecto_ddm2/main_duck_screen.dart';
 
 Future<void> addDuffy(String name, String location, String outfit, double coins, double duckiness, int life, List<DuffyAccessory> accessories, String color) async {
@@ -23,6 +25,7 @@ Future<void> addDuffy(String name, String location, String outfit, double coins,
     'Color': color,
   });
 }
+
 
 
 class DuckCreator extends StatefulWidget {
@@ -251,7 +254,15 @@ void _createDuffy() async {
 //   final double coins;
 //   final double life;
 //   final double duckiness;
+// class Duffy {
+//   final String name;
+//   final String location;
+//   final String outfit;
+//   final double coins;
+//   final double life;
+//   final double duckiness;
 
+//   Duffy({required this.name, required this.location, required this.outfit, required this.coins, required this.life, required this.duckiness});
 //   Duffy({required this.name, required this.location, required this.outfit, required this.coins, required this.life, required this.duckiness});
 
 //   factory Duffy.fromFirestore(DocumentSnapshot doc) {
