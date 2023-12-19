@@ -6,7 +6,7 @@ import 'package:proyecto_ddm2/DuffyAccessory.dart';
 import 'package:proyecto_ddm2/firebase_manager.dart';
 import 'package:proyecto_ddm2/main_duck_screen.dart';
 
-Future<void> addDuffy(String name, String location, String outfit, double coins, double duckiness, double life, List<DuffyAccessory> accessories) async {
+Future<void> addDuffy(String name, String location, String outfit, double coins, double duckiness, int life, List<DuffyAccessory> accessories, String color) async {
   var userID = FirebaseAuth.instance.currentUser!.uid;
   var duffyRef = FirebaseFirestore.instance.collection('duffy').doc(userID);
 
@@ -19,6 +19,8 @@ Future<void> addDuffy(String name, String location, String outfit, double coins,
     'Duckiness': duckiness,
     'Life': life,
     'Accessories': accessoriesMap,  
+    'Last_connection': DateTime.timestamp(), 
+    'Color': color,
   });
 }
 
@@ -222,6 +224,7 @@ void _createDuffy() async {
   var name = _duffyNameController.text;
   var location = dropdownLocation;
   var outfit = getImageUrl(_selectedColor); 
+  var color = _selectedColor.toString().split('.').last;
   
 
   if (name.isNotEmpty && location.isNotEmpty) {
@@ -229,9 +232,8 @@ void _createDuffy() async {
       FirebaseManager fManager = FirebaseManager();
       List<DuffyAccessory> defaultAccessories = await fManager.getDefaultAccessories();
 
-       print('Accesorios ${defaultAccessories[0].name}');
 
-      await addDuffy(name, location, outfit, 0.0, 100.0, 0.0, defaultAccessories);
+      await addDuffy(name, location, outfit, 0.0, 100.0, 0, defaultAccessories, color);
     } catch (error) {
       
       print('Error al crear o actualizar Duffy: $error');

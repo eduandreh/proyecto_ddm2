@@ -13,8 +13,8 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
-  TextEditingController _passwordTextController = TextEditingController();
-  TextEditingController _emailTextController = TextEditingController();
+  final TextEditingController _passwordTextController = TextEditingController();
+  final TextEditingController _emailTextController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +78,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     .then((value) => Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const DuckCreator())))
+                            builder: (context) => const MainDuck())))
                     .catchError((error) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
