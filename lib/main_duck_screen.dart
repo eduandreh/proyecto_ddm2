@@ -90,7 +90,7 @@ class _MainDuck extends State<MainDuck> {
                 ),
                 const SizedBox(width: 2),
                 Text(
-                  _duffy != null ? _duffy!.coins.toString() : "000",
+                  _duffy == null ? "000" : _duffy!.coins.toString(),
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
