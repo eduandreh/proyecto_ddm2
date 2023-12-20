@@ -5,14 +5,6 @@ class Shop {
   final int price;
   final String image;
 
-  int getPrice () {
-    return price;
-  }
-
-  String getImage () {
-    return image;
-  }
-
   Shop(
       {required this.price, required this.image});
 
