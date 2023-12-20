@@ -10,8 +10,6 @@ class MainDuck extends StatefulWidget {
   //needs to get duck object from login
   const MainDuck({super.key});
 
-  //const MainDuck({super.key, required Duck duck});
-
   @override
   State<MainDuck> createState() => _MainDuck();
 }

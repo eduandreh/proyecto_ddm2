@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto_ddm2/DuffyAccessory.dart';
 import 'package:proyecto_ddm2/Shop.dart';
+import 'Duffy.dart';
 import 'firebase_manager.dart';
 
 class ShopScreen extends StatefulWidget {
@@ -11,11 +13,14 @@ class ShopScreen extends StatefulWidget {
 }
 
 class _ShopScreen extends State<ShopScreen> {
-  int _counter = 950;
 
   List<Shop> shopObjects = [];
   List<DuffyAccessory> duffyObjects = [];
+  List<dynamic> duffyObjectsDynamic = [];
+
   FirebaseManager fManager = FirebaseManager();
+
+  Duffy? _duffy;
 
   List<String> weatherIcons = [
     'assets/weather/1rain_icon.png',
@@ -34,15 +39,83 @@ class _ShopScreen extends State<ShopScreen> {
 
   void getInfo() async {
     shopObjects = await fManager.getShop();
-    duffyObjects = await fManager.getDefaultAccessories();
-    //shopObjects = [];
+    _duffy = await fManager.getDuck();
+    duffyObjectsDynamic = _duffy?.accessories;
+    duffyObjects = convertDynamicList(duffyObjectsDynamic);
+    sortObjects();
     setState(() {});
   }
 
-  void _incrementCounter() {
-    setState(() {
-      _counter = _counter - 150;
-    });
+  List<DuffyAccessory> convertDynamicList(List<dynamic> dynamicList) {
+    List<DuffyAccessory> result = dynamicList.map((dynamic item) {
+      return DuffyAccessory(
+        name: item['name'] ?? '',
+        sold: item['sold'] ?? '',
+        gotten: item['gotten'] ?? '',
+      );
+    }).toList();
+
+    return result;
+  }
+
+  void sortObjects() {
+    duffyObjects.sort((a, b) => a.name.compareTo(b.name));
+  }
+
+  Future<void> updateAccessoryImage(index) async {
+
+    List<String> accessoriesURL = await fManager.getImagesURL("/ducks/${_duffy?.color}/");
+    var accessoryImage = accessoriesURL[index];
+
+    await fManager.updateAccessoryImage(accessoryImage);
+
+  }
+
+  Future <void> updateSoldObject(index) async {
+    //change preSold object to false
+    for (var object in duffyObjects) {
+      if (object.sold) {
+        await fManager.updateSoldBool(false, object.name, object.gotten);
+      }
+    }
+
+    //change bought object: sold & gotten to true
+    await fManager.updateSoldBool(true, duffyObjects[index].name, duffyObjects[index].gotten);
+
+    //update Mallards
+    await fManager.updateMallards(-shopObjects[index].price);
+    await updateAccessoryImage(index);
+  }
+
+  void buyAccessory(index) async {
+
+    var isLocked = 0;
+
+    //verify locked accessory (ball) by looking all 4 objects
+    for(var object in duffyObjects) {
+      if(object.gotten) {
+        isLocked++;
+      }
+    }
+
+    if (shopObjects[index].price <= _duffy!.coins) {
+      //verification of locked object
+      if (duffyObjects[index].name == "5ball") {
+        if(isLocked >= 4) {  //we need to know if the other 4 objects are gotten
+          await updateSoldObject(index);
+        }
+      } else {  //not trying to buy the locked object
+        await updateSoldObject(index);
+      }
+
+      print("finalllllll!!!!!!!!");
+
+    } else {
+      print("Not enough money!");
+    }
+
+    setState(() {});
+
   }
 
   @override
@@ -73,7 +146,7 @@ class _ShopScreen extends State<ShopScreen> {
                 ),
                 const SizedBox(width: 2),
                 Text(
-                  "$_counter",
+                  _duffy == null ? "000" : _duffy!.coins.toString(),
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -173,7 +246,7 @@ class _ShopScreen extends State<ShopScreen> {
                                   ],
                                 ),
                                 FilledButton(
-                                    onPressed: _incrementCounter,
+                                    onPressed: () => duffyObjects[index].sold ? '' :  buyAccessory(index),
                                     style: ButtonStyle(
                                       backgroundColor: duffyObjects[index].sold ? const MaterialStatePropertyAll(Colors.grey) : const MaterialStatePropertyAll(Color(0xff236A26)),
                                     ),
