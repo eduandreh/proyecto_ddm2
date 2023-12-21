@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto_ddm2/shop_screen.dart';
 import 'package:proyecto_ddm2/signin_screen.dart';
@@ -22,6 +23,7 @@ class _MainDuck extends State<MainDuck> {
   @override
   void initState() {
     super.initState();
+    saveAppOpenTime();
     getDuck();
     getCurrentWeather(48.856613, 2.352222); //need duck's location
     getImages();
@@ -55,6 +57,7 @@ class _MainDuck extends State<MainDuck> {
           centerTitle: true,
           leading: IconButton(
             onPressed: () {
+              signOut();
               Navigator.push(
                   context,
                   MaterialPageRoute(
