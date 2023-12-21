@@ -23,7 +23,7 @@ class Duffy {
       location: data['Location'] ?? '',
       outfit: data['Outfit'] ?? '',
       coins: data['Coins']?.toDouble() ?? 0.0,
-      life: data['Life']?.toDouble() ?? 100.0,
+      life: data['Life'] ?? 100,
       duckiness: data['Duckiness']?.toDouble() ?? 0.0,
       color: data['Color'] ?? '',
       accessories: data['Accessories'] ?? [],
