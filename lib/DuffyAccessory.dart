@@ -6,24 +6,13 @@ class DuffyAccessory {
   final bool sold;
   final bool gotten;
 
-  String getImage () {
-    return name;
-  }
-
-  bool isSold () {
-    return sold;
-  }
-
-  bool isGotten () {
-    return gotten;
-  }
-
   DuffyAccessory(
       {required this.name, required this.sold, required this.gotten});
 
   factory DuffyAccessory.fromFirestore(DocumentSnapshot<Map<String, dynamic>> snapshot,
       SnapshotOptions? options, ) {
-    final data = snapshot.data();
+
+    final data = snapshot.data()!;
 
     return DuffyAccessory(
       name: data?['name'],
