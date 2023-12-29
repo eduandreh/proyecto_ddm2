@@ -112,10 +112,6 @@ class FirebaseManager {
 
   }
 
-  void getCoordsByCity(){
-
-  }
-
   Future<Duffy> getDuck() async {
     var userId = auth.currentUser!.uid;
 

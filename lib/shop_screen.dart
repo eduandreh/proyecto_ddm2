@@ -5,8 +5,8 @@ import 'Duffy.dart';
 import 'firebase_manager.dart';
 
 class ShopScreen extends StatefulWidget {
-  const ShopScreen({super.key});
-
+  const ShopScreen({super.key, required this.onDuckUpdated});
+  final Function(Duffy? duffy) onDuckUpdated;
   @override
   State<ShopScreen> createState() => _ShopScreen();
 }
@@ -130,6 +130,7 @@ class _ShopScreen extends State<ShopScreen> {
     getInfo();
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -137,6 +138,7 @@ class _ShopScreen extends State<ShopScreen> {
             centerTitle: true,
             leading: BackButton(
               onPressed: () {
+                widget.onDuckUpdated(_duffy);
                 Navigator.pop(context);
               },
               color: Colors.black,
