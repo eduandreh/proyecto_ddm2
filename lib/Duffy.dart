@@ -5,7 +5,7 @@ import 'package:proyecto_ddm2/DuffyAccessory.dart';
 class Duffy {
   final String name;
   final String location;
-  final String outfit;
+  late final String outfit;
   final double coins;
   final int life;
   final double duckiness;

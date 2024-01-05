@@ -57,7 +57,8 @@ class _MainDuck extends State<MainDuck> {
 
     _swipes = _swipes + 1;
     if (_swipes == 10) {
-      fManager.updateMallards(1);
+      fManager.incrementDuffyField("Coins", 1);
+      fManager.incrementDuffyField("Duckiness", 0.5);
 
       setState(() {
         duffyFuture = setDuck();
@@ -73,7 +74,8 @@ class _MainDuck extends State<MainDuck> {
         builder: (context, snapshot) {
           if (snapshot.hasData && backgroundImages.isNotEmpty) {
             var duffy = snapshot.data;
-            _duffyWeather = duffy;
+            setWeather();
+            //_duffyWeather = duffy;
             return Scaffold(
               appBar: AppBar(
                   centerTitle: true,
@@ -160,7 +162,7 @@ class _MainDuck extends State<MainDuck> {
                                   width: 300,
                                   height: 30,
                                   child: LinearProgressIndicator(
-                                    value: duffy.duckiness / 100,
+                                    value: duffy.duckiness == 0.0 ? 0.0 : duffy.duckiness / 100,
                                     backgroundColor: Colors.grey[300],
                                     valueColor:
                                         const AlwaysStoppedAnimation<Color>(
@@ -197,7 +199,7 @@ class _MainDuck extends State<MainDuck> {
                                   style: TextStyle(
                                       fontSize: 24, color: Color(0xff9C4615))),
                               const SizedBox(width: 12),
-                              Text(duffy.life.toString(),
+                              Text(duffy.life != 0 ? duffy.life.toString() : "0",
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 28,
