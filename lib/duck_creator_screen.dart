@@ -7,6 +7,7 @@ import 'package:proyecto_ddm2/firebase_manager.dart';
 import 'package:proyecto_ddm2/DuffyAccessory.dart';
 import 'package:proyecto_ddm2/firebase_manager.dart';
 import 'package:proyecto_ddm2/main_duck_screen.dart';
+import 'package:proyecto_ddm2/signin_screen.dart';
 
 Future<void> addDuffy(String name, String location, String outfit, double coins, double duckiness, int life, List<DuffyAccessory> accessories, String color) async {
   var userID = FirebaseAuth.instance.currentUser!.uid;
@@ -52,7 +53,7 @@ String getImageUrl(DuckColor outfit) {
   }
 }
 
-const List<String> cities = <String>['Alaska', 'Barcelona', 'Egipto', 'Los Angeles', 'Paris'];
+const List<String> cities = <String>['Alaska', 'Barcelona', 'El Cairo', 'Los Angeles', 'Paris'];
 
 class _DuckCreatorState extends State<DuckCreator> {
   TextEditingController _duffyNameController = TextEditingController();
@@ -192,7 +193,7 @@ class _DuckCreatorState extends State<DuckCreator> {
                 
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const MainDuck()),
+                  MaterialPageRoute(builder: (context) => const SignInScreen()),
                 );
                 _createDuffy();
                },

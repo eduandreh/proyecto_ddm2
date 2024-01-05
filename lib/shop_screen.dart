@@ -87,7 +87,7 @@ class _ShopScreen extends State<ShopScreen> {
         true, duffyObjects[index].name, duffyObjects[index].gotten);
 
     //update Mallards
-    await fManager.updateMallards(-shopObjects[index].price);
+    await fManager.incrementDuffyField("Coins", -shopObjects[index].price);
     await updateAccessoryImage(index);
   }
 

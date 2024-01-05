@@ -84,18 +84,6 @@ class FirebaseManager {
 
   }
 
-  Future<void> updateMallards(quantity) async {
-    var ref = db.collection("duffy").doc(auth.currentUser?.uid);
-
-    await ref.update({
-      "Coins": FieldValue.increment(quantity),
-    }).then(
-          (value) => print("5.DocumentSnapshot successfully updated!"),
-      onError: (e) => print("5.Error updating document $e"),
-    );
-
-  }
-
   Future<void> updateAccessoryImage(accessoryImage) async {
     var ref = db.collection("duffy").doc(auth.currentUser?.uid);
 
@@ -107,8 +95,15 @@ class FirebaseManager {
     );
   }
 
-  void updateDuckinessWithSwipes() {
-    //get ducks duckiness
+  Future<void> incrementDuffyField(field, quantity) async {
+    var ref = db.collection("duffy").doc(auth.currentUser?.uid);
+
+    await ref.update({
+      field: FieldValue.increment(quantity),
+    }).then(
+          (value) => print("5.DocumentSnapshot successfully updated!"),
+      onError: (e) => print("5.Error updating document $e"),
+    );
 
   }
 
