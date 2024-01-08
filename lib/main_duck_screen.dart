@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:proyecto_ddm2/settings_screen.dart';
 import 'package:proyecto_ddm2/shop_screen.dart';
 import 'package:proyecto_ddm2/signin_screen.dart';
 import 'package:proyecto_ddm2/weather_api_manager.dart';
@@ -59,13 +61,12 @@ class _MainDuck extends State<MainDuck> {
           centerTitle: true,
           leading: IconButton(
             onPressed: () {
-              signOut();
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const SignInScreen()));
+                      builder: (context) => const SettingsScreen()));
             },
-            icon: const Icon(Icons.logout_rounded, color: Color(0xffDD8A29)),
+            icon: const Icon(Icons.settings, color: Color(0xffDD8A29)),
           ),
           leadingWidth: 50,
           title: Text(

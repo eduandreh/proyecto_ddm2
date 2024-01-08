@@ -52,3 +52,11 @@ Future<void> signOut() async {
 bool isSignedIn() {
   return FirebaseAuth.instance.currentUser?.uid != null;
 }
+
+Future<void> deleteDuffy() async {
+  var userID = FirebaseAuth.instance.currentUser?.uid;
+  if (userID != null) {
+    var userActivityRef = FirebaseFirestore.instance.collection('duffy').doc(userID);
+    return userActivityRef.delete();
+  }
+}
