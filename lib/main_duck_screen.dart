@@ -17,27 +17,26 @@ class _MainDuck extends State<MainDuck> {
   List<String> backgroundImages = [];
   FirebaseManager fManager = FirebaseManager();
   String swipe = '';
-  late Future<Duffy> duffyFuture;
+
+  late Duffy? duffy;
+  late String? weather;
+  late int? _mallards;
+  late double? _duckiness;
 
   @override
   void initState() {
-    duffyFuture = setDuck();
     super.initState();
-    saveAppOpenTime();
+//    saveAppOpenTime();
     getImages();
   }
 
-  Future<Duffy> setDuck() {
-    return Future(() => getDuck());
-  }
-
-  Future<Duffy> getDuck() async {
-    Duffy duck = await fManager.getDuck();
-    return duck;
-  }
-
-  Future<String> setWeather(Duffy duck) async {
-      return Future(() => getCurrentWeather(duck.location));
+  Future<void> getDuffy() async {
+    duffy = await fManager.getDuck();
+    weather = await getCurrentWeather(duffy!.location);
+    await updateDuckiness(duffy!, weather!);
+    duffy = await fManager.getDuck();
+    _mallards = duffy!.coins;
+    _duckiness = duffy!.duckiness;
   }
 
   void getImages() async {
@@ -45,32 +44,55 @@ class _MainDuck extends State<MainDuck> {
   }
 
   void _incrementSwipes() {
-
     _swipes = _swipes + 1;
+    print(_swipes);
     if (_swipes == 10) {
       fManager.incrementDuffyField("Coins", 1);
       fManager.incrementDuffyField("Duckiness", 0.5);
-
-      setState(() {
-        duffyFuture = setDuck();
-      });
       _swipes = 0;
+    }
+  }
+
+  Future<void> updateDuckiness(Duffy duffy, String weather) async {
+    Duration difference = DateTime.now()
+        .difference(DateTime.parse(duffy.lastConnection.toDate().toString()));
+
+    int days = difference.inDays;
+    int hours = difference.inHours % 24;
+    int totaHours = days * 24 + hours;
+    if (days >= 1 || hours >= 1 && duffy.duckiness > 0) {
+      saveAppOpenTime();
+      double totalPenalty = 0;
+      if (!duffy.outfit.contains("ball")) {
+        if (weather.contains("hot") && !duffy.outfit.contains("Glasses") ||
+            weather.contains("snow") && !duffy.outfit.contains("Scarf") ||
+            weather.contains("wind") && !duffy.outfit.contains("Hat") ||
+            weather.contains("rain") && !duffy.outfit.contains("Umb")) {
+          totalPenalty = totaHours * 1.5;
+        }
+      }
+
+      totalPenalty = totaHours * 0.5 + totalPenalty;
+      if (duffy.duckiness - totalPenalty > 0) {
+        await fManager.incrementDuffyField("Duckiness", -totalPenalty);
+      } else {
+        await fManager.incrementDuffyField("Duckiness", -duffy.duckiness);
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: duffyFuture,
+        future: getDuffy(),
         builder: (context, snapshot) {
-          if (snapshot.hasData && backgroundImages.isNotEmpty) {
-            var duffy = snapshot.data;
-            Future<String> weatherFuture = setWeather(duffy!);
-            //_duffyWeather = duffy;
+          if (snapshot.connectionState == ConnectionState.done &&
+              backgroundImages.isNotEmpty) {
             return Scaffold(
               appBar: AppBar(
                   centerTitle: true,
-                  bottom: const PreferredSize(preferredSize: Size.fromHeight(0), child: SizedBox()),
+                  bottom: const PreferredSize(
+                      preferredSize: Size.fromHeight(0), child: SizedBox()),
                   leading: IconButton(
                     onPressed: () {
                       signOut();
@@ -84,7 +106,7 @@ class _MainDuck extends State<MainDuck> {
                   ),
                   leadingWidth: 50,
                   title: Text(
-                    duffy.location,
+                    duffy!.location,
                     style:
                         const TextStyle(fontSize: 18, color: Color(0xff7e7e7e)),
                   ),
@@ -106,7 +128,7 @@ class _MainDuck extends State<MainDuck> {
                         ),
                         const SizedBox(width: 2),
                         Text(
-                          duffy.coins.toString(),
+                          _mallards.toString(),
                           style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -124,24 +146,11 @@ class _MainDuck extends State<MainDuck> {
                     Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          FutureBuilder(
-                              future: weatherFuture,
-                              builder: (context, snapshot) {
-                                if (snapshot.hasData) {
-                                  final icon = snapshot.data.toString();
-
-                                  return Image.asset(
-                                    icon,
-                                    color: Colors.orange,
-                                    height: 30,
-                                  );
-                                } else {
-                                  return Image.asset(
-                                    "assets/weather/6sun_icon.png",
-                                    color: Colors.orange,
-                                  );
-                                }
-                              }),
+                          Image.asset(
+                            weather!,
+                            color: Colors.orange,
+                            height: 30,
+                          ),
 
                           const SizedBox(height: 32),
                           //progress bar
@@ -153,7 +162,9 @@ class _MainDuck extends State<MainDuck> {
                                   width: 300,
                                   height: 30,
                                   child: LinearProgressIndicator(
-                                    value: duffy.duckiness == 0.0 ? 0.0 : duffy.duckiness / 100,
+                                    value: duffy!.duckiness == 0.0
+                                        ? 0.0
+                                        : duffy!.duckiness / 100,
                                     backgroundColor: Colors.grey[300],
                                     valueColor:
                                         const AlwaysStoppedAnimation<Color>(
@@ -177,7 +188,7 @@ class _MainDuck extends State<MainDuck> {
                           ),
 
                           const SizedBox(height: 10),
-                          Text(duffy.name,
+                          Text(duffy!.name,
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 32,
@@ -190,7 +201,10 @@ class _MainDuck extends State<MainDuck> {
                                   style: TextStyle(
                                       fontSize: 24, color: Color(0xff9C4615))),
                               const SizedBox(width: 12),
-                              Text(duffy.life != 0 ? duffy.life.toString() : "0",
+                              Text(
+                                  duffy!.life != 0
+                                      ? duffy!.life.toString()
+                                      : "0",
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 28,
@@ -206,34 +220,33 @@ class _MainDuck extends State<MainDuck> {
                                       visible: backgroundImages.isNotEmpty
                                           ? true
                                           : false,
-                                      child:
-                                          Image.network(backgroundImages[0], width: 380))),
+                                      child: Image.network(backgroundImages[0],
+                                          width: 380))),
                               SizedBox(
                                 height: 350,
                                 child: Align(
                                   alignment: Alignment.center,
                                   child:
-                                    //weather icon
-                                    Image.network(duffy.outfit, width: 200),
+                                      //weather icon
+                                      Image.network(duffy!.outfit,
+                                          fit: BoxFit.fitWidth),
                                 ),
                               ),
                               SizedBox(
                                   width: 300,
                                   height: 300,
-                                  child: GestureDetector(
-                                    onPanUpdate: (details) {
-                                      if (details.delta.dx > 4) {
-                                        swipe = 'right';
-                                      } else if (details.delta.dx < 4) {
-                                        swipe = 'left';
-                                      }
-                                    },
-                                    onPanEnd: (details) {
-                                      if (swipe == 'right' || swipe == 'left') {
-                                        _incrementSwipes();
-                                      }
-                                    },
-                                  ))
+                                  child:
+                                      GestureDetector(onPanUpdate: (details) {
+                                    if (details.delta.dx > 4) {
+                                      swipe = 'right';
+                                    } else if (details.delta.dx < 4) {
+                                      swipe = 'left';
+                                    }
+                                  }, onPanEnd: (details) {
+                                    if (swipe == 'right' || swipe == 'left') {
+                                      _incrementSwipes();
+                                    }
+                                  }))
                             ],
                           ),
                         ])
@@ -256,15 +269,14 @@ class _MainDuck extends State<MainDuck> {
                         await Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ShopScreen(
-                                  onDuckUpdated:(duffyUpt) {
-                                    if(duffyUpt != null ){
-                                      setState(() {
-                                        duffyFuture = Future.value(duffyUpt);
-                                      });
-                                    }
-                                  }
-                                )));
+                                builder: (context) =>
+                                    ShopScreen(onDuckUpdated: (duffyUpt) {
+                                      if (duffyUpt != null) {
+                                        setState(() {
+                                          duffy = duffyUpt;
+                                        });
+                                      }
+                                    })));
                       },
                     ),
                   ],
