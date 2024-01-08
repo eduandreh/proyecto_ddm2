@@ -6,25 +6,28 @@ Future<String> getCurrentWeather(city) async {
   Weather weather = await wf.currentWeatherByCityName(city);
   String icon = '';
   if (weather.weatherDescription != null) {
-    if(weather.temperature?.celsius != null && weather.temperature!.celsius! > 27){
-      icon = getTempIcon();
-    }else{
+    if(weather.temperature?.celsius != null && weather.temperature!.celsius! < 27 && weather.temperature!.celsius! > 10 ){
       icon = getWeatherIcon(weather.weatherDescription!);
-
+    }else{
+      icon = getTempIcon(weather.temperature!.celsius!);
     }
   }
   return icon;
 }
 
-String getTempIcon() {
-  return "assets/weather/2hot_icon.png";
+String getTempIcon(double temp) {
+  if (temp < 10) {
+    return "assets/weather/3snow_icon.png";
+  } else {
+    return "assets/weather/2hot_icon.png";
+  }
 }
 
 String getWeatherIcon(String weather) {
-  if (weather.contains("rain") || weather.contains("drizzle")) {
-    return "assets/weather/1rain_icon.png";
-  } else if (weather.contains("snow")) {
+  if (weather.contains("snow") ) {
     return "assets/weather/3snow_icon.png";
+  } else if (weather.contains("rain") || weather.contains("drizzle")) {
+    return "assets/weather/1rain_icon.png";
   }else if (weather.contains("wind")) {
     return "assets/weather/4wind_icon.png";
   } else if (weather.contains("tornado")) {

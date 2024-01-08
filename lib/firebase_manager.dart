@@ -112,8 +112,9 @@ class FirebaseManager {
 
     Duffy duffy;
     final doc = await db.collection("duffy").doc(userId).get();
+    print(doc);
     duffy = Duffy.fromFirestore(doc);
-
+    print(duffy);
     return duffy;
   }
 

@@ -11,10 +11,11 @@ class Duffy {
   final double duckiness;
   final String color;
   dynamic accessories = List<DuffyAccessory>;
+  final Timestamp lastConnection;
 
 
   Duffy(
-      {required this.name, required this.location, required this.outfit, required this.coins, required this.life, required this.duckiness, required this.accessories, required this.color});
+      {required this.name, required this.location, required this.outfit, required this.coins, required this.life, required this.duckiness, required this.accessories, required this.color, required this.lastConnection});
 
   factory Duffy.fromFirestore(DocumentSnapshot doc) {
     Map data = doc.data() as Map<String, dynamic>;
@@ -25,9 +26,9 @@ class Duffy {
       coins: data['Coins'] ?? 0,
       life: data['Life'] ?? 100,
       duckiness: data['Duckiness']?.toDouble() ?? 0.0,
+      lastConnection: data['Last_connection'] ?? '',
       color: data['Color'] ?? '',
       accessories: data['Accessories'] ?? [],
-
     );
   }
 }
