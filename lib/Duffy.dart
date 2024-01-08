@@ -6,7 +6,7 @@ class Duffy {
   final String name;
   final String location;
   late final String outfit;
-  final double coins;
+  final int coins;
   final int life;
   final double duckiness;
   final String color;
@@ -22,7 +22,7 @@ class Duffy {
       name: data['Name'] ?? '',
       location: data['Location'] ?? '',
       outfit: data['Outfit'] ?? '',
-      coins: data['Coins']?.toDouble() ?? 0.0,
+      coins: data['Coins'] ?? 0,
       life: data['Life'] ?? 100,
       duckiness: data['Duckiness']?.toDouble() ?? 0.0,
       color: data['Color'] ?? '',
