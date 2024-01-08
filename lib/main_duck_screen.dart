@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto_ddm2/shop_screen.dart';
 import 'package:proyecto_ddm2/signin_screen.dart';
@@ -19,16 +18,12 @@ class _MainDuck extends State<MainDuck> {
   FirebaseManager fManager = FirebaseManager();
   String swipe = '';
   late Future<Duffy> duffyFuture;
-  Duffy? _duffyWeather;
-  late Future<String> weatherFuture;
 
   @override
   void initState() {
     duffyFuture = setDuck();
-    weatherFuture = setWeather();
     super.initState();
     saveAppOpenTime();
-    //need duck's location
     getImages();
   }
 
@@ -41,12 +36,8 @@ class _MainDuck extends State<MainDuck> {
     return duck;
   }
 
-  Future<String> setWeather() {
-    if (_duffyWeather != null) {
-      return Future(() => getCurrentWeather(_duffyWeather?.location));
-    } else {
-      return Future(() => getCurrentWeather("London"));
-    }
+  Future<String> setWeather(Duffy duck) async {
+      return Future(() => getCurrentWeather(duck.location));
   }
 
   void getImages() async {
@@ -74,7 +65,7 @@ class _MainDuck extends State<MainDuck> {
         builder: (context, snapshot) {
           if (snapshot.hasData && backgroundImages.isNotEmpty) {
             var duffy = snapshot.data;
-            setWeather();
+            Future<String> weatherFuture = setWeather(duffy!);
             //_duffyWeather = duffy;
             return Scaffold(
               appBar: AppBar(
@@ -93,7 +84,7 @@ class _MainDuck extends State<MainDuck> {
                   ),
                   leadingWidth: 50,
                   title: Text(
-                    duffy!.location,
+                    duffy.location,
                     style:
                         const TextStyle(fontSize: 18, color: Color(0xff7e7e7e)),
                   ),
