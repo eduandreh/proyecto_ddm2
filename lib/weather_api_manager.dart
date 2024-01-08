@@ -6,9 +6,18 @@ Future<String> getCurrentWeather(city) async {
   Weather weather = await wf.currentWeatherByCityName(city);
   String icon = '';
   if (weather.weatherDescription != null) {
-    icon = getWeatherIcon(weather.weatherDescription!);
+    if(weather.temperature?.celsius != null && weather.temperature!.celsius! > 27){
+      icon = getTempIcon();
+    }else{
+      icon = getWeatherIcon(weather.weatherDescription!);
+
+    }
   }
   return icon;
+}
+
+String getTempIcon() {
+  return "assets/weather/2hot_icon.png";
 }
 
 String getWeatherIcon(String weather) {
@@ -25,7 +34,7 @@ String getWeatherIcon(String weather) {
   }  else if (weather.contains("clouds")) {
     return "assets/weather/8clouds_icon.png";
   }  else if (weather.contains("clear")) {
-    return "assets/weather/2hot_icon.png";
+    return "assets/weather/6sun_icon.png";
   } else {
     return "assets/weather/6sun_icon.png";
   }
