@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:proyecto_ddm2/DuffyAccessory.dart';
 
 class Duffy {
@@ -31,30 +30,4 @@ class Duffy {
       accessories: data['Accessories'] ?? [],
     );
   }
-}
-
-
-Future<void> saveAppOpenTime() async {
-  var userID = FirebaseAuth.instance.currentUser?.uid;
-  if (userID != null) {
-    var userActivityRef = FirebaseFirestore.instance.collection('duffy').doc(userID);
-    var now = DateTime.now();
-
-    return userActivityRef.set({
-      'Last_connection': now,
-      // Puedes incluir otros datos aquí si lo deseas
-    }, SetOptions(merge: true));
-  }
-}
-
-Future<void> signOut() async {
-  try {
-    await FirebaseAuth.instance.signOut();
-  } catch (e) {
-    print("Error al cerrar sesión: $e");
-  }
-}
-
-bool isSignedIn() {
-  return FirebaseAuth.instance.currentUser?.uid != null;
 }
