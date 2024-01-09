@@ -13,6 +13,32 @@ class FirebaseManager {
 
   FirebaseStorage storage = FirebaseStorage.instance;
 
+  Future<void> saveAppOpenTime() async {
+    var userID = auth.currentUser?.uid;
+    if (userID != null) {
+      var userActivityRef = db.collection('duffy').doc(userID);
+      var now = DateTime.now();
+
+      return userActivityRef.set({
+        'Last_connection': now,
+        // Puedes incluir otros datos aquí si lo deseas
+      }, SetOptions(merge: true));
+    }
+  }
+
+  Future<void> signOut() async {
+    try {
+      await auth.signOut();
+    } catch (e) {
+      print("Error al cerrar sesión: $e");
+    }
+  }
+
+  static bool isSignedIn() {
+    return FirebaseAuth.instance.currentUser?.uid != null;
+  }
+
+
   Future<List<String>> getImagesURL(folderPath) async {
     // Get a reference to the folder
     Reference folderRef = storage.ref().child(folderPath);
@@ -112,9 +138,7 @@ class FirebaseManager {
 
     Duffy duffy;
     final doc = await db.collection("duffy").doc(userId).get();
-    print(doc);
     duffy = Duffy.fromFirestore(doc);
-    print(duffy);
     return duffy;
   }
 

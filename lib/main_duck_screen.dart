@@ -20,14 +20,20 @@ class _MainDuck extends State<MainDuck> {
 
   late Duffy? duffy;
   late String? weather;
-  late int? _mallards;
-  late double? _duckiness;
+  //late int? _mallards;
+  //late double? _duckiness;
+
+  late ValueNotifier<int?> _mallardsNotifier;
+  late ValueNotifier<double?> _duckinessNotifier;
 
   @override
   void initState() {
     super.initState();
 //    saveAppOpenTime();
     getImages();
+    _mallardsNotifier = ValueNotifier<int?>(0);
+    _duckinessNotifier = ValueNotifier<double?>(100.0);
+
   }
 
   Future<void> getDuffy() async {
@@ -35,8 +41,8 @@ class _MainDuck extends State<MainDuck> {
     weather = await getCurrentWeather(duffy!.location);
     await updateDuckiness(duffy!, weather!);
     duffy = await fManager.getDuck();
-    _mallards = duffy!.coins;
-    _duckiness = duffy!.duckiness;
+    _mallardsNotifier.value = duffy!.coins;
+   _duckinessNotifier.value = duffy!.duckiness;
   }
 
   void getImages() async {
@@ -45,11 +51,13 @@ class _MainDuck extends State<MainDuck> {
 
   void _incrementSwipes() {
     _swipes = _swipes + 1;
-    print(_swipes);
-    if (_swipes == 10) {
+    if (_swipes == 3) {
       fManager.incrementDuffyField("Coins", 1);
       fManager.incrementDuffyField("Duckiness", 0.5);
       _swipes = 0;
+      _mallardsNotifier.value = _mallardsNotifier.value! + 1;
+      _duckinessNotifier.value = _duckinessNotifier.value! + 1;
+
     }
   }
 
@@ -61,7 +69,7 @@ class _MainDuck extends State<MainDuck> {
     int hours = difference.inHours % 24;
     int totaHours = days * 24 + hours;
     if (days >= 1 || hours >= 1 && duffy.duckiness > 0) {
-      saveAppOpenTime();
+      fManager.saveAppOpenTime();
       double totalPenalty = 0;
       if (!duffy.outfit.contains("ball")) {
         if (weather.contains("hot") && !duffy.outfit.contains("Glasses") ||
@@ -95,7 +103,7 @@ class _MainDuck extends State<MainDuck> {
                       preferredSize: Size.fromHeight(0), child: SizedBox()),
                   leading: IconButton(
                     onPressed: () {
-                      signOut();
+                      fManager.signOut();
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -127,12 +135,17 @@ class _MainDuck extends State<MainDuck> {
                           ),
                         ),
                         const SizedBox(width: 2),
-                        Text(
-                          _mallards.toString(),
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        ValueListenableBuilder<int?>(
+                          valueListenable: _mallardsNotifier,
+                          builder: (context, mallards, _) {
+                            return Text(
+                              mallards?.toString() ?? '',
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            );
+                          },
                         ),
                         const SizedBox(width: 16),
                       ],
@@ -161,16 +174,21 @@ class _MainDuck extends State<MainDuck> {
                                 child: SizedBox(
                                   width: 300,
                                   height: 30,
-                                  child: LinearProgressIndicator(
-                                    value: duffy!.duckiness == 0.0
-                                        ? 0.0
-                                        : duffy!.duckiness / 100,
-                                    backgroundColor: Colors.grey[300],
-                                    valueColor:
+                                  child: ValueListenableBuilder<double?>(
+                                    valueListenable: _duckinessNotifier,
+                                    builder: (context, duckiness, _) {
+                                      return LinearProgressIndicator(
+                                        value: duckiness == 0.0 || duckiness == null
+                                            ? 0.0
+                                            : duckiness / 100,
+                                        backgroundColor: Colors.grey[300],
+                                        valueColor:
                                         const AlwaysStoppedAnimation<Color>(
                                             Color(0xffDD8A29)),
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(30)),
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(30)),
+                                      );
+                                    },
                                   ),
                                 ),
                               ),
@@ -293,4 +311,12 @@ class _MainDuck extends State<MainDuck> {
           }
         });
   }
+
+  @override
+  void dispose() {
+    _mallardsNotifier.dispose();
+    _duckinessNotifier.dispose();
+    super.dispose();
+  }
 }
+
