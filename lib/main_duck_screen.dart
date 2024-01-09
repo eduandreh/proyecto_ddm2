@@ -107,12 +107,12 @@ class _MainDuck extends State<MainDuck> {
                       fManager.signOut();
                       Navigator.push(
                           context,
-                          MaterialPageRoute(
-                              builder: (context) => const SignInScreen()));
-                    },
-                    icon: const Icon(Icons.logout_rounded,
-                        color: Color(0xffDD8A29)),
-                  ),
+                         MaterialPageRoute(
+                   
+                      builder: (context) => SettingsScreen()));
+            },
+            icon: const Icon(Icons.settings, color: Color(0xffDD8A29)),
+          ),
                   leadingWidth: 50,
                   title: Text(
                     duffy!.location,

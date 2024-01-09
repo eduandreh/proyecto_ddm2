@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:proyecto_ddm2/DuffyAccessory.dart';
 
 class Duffy {
@@ -32,10 +33,6 @@ class Duffy {
   }
 }
 
-Future<void> deleteDuffy() async {
-  var userID = FirebaseAuth.instance.currentUser?.uid;
-  if (userID != null) {
-    var userActivityRef = FirebaseFirestore.instance.collection('duffy').doc(userID);
-    return userActivityRef.delete();
-  }
-}
+
+
+

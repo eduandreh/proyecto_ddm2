@@ -3,15 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:proyecto_ddm2/Duffy.dart';
 import 'package:proyecto_ddm2/duck_creator_screen.dart';
 import 'package:proyecto_ddm2/signin_screen.dart';
+import 'package:proyecto_ddm2/firebase_manager.dart';
 
 class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({super.key});
+  
+  SettingsScreen({super.key});
+
+FirebaseManager fManager = FirebaseManager();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Settings'),
         backgroundColor: const Color.fromRGBO(221, 138, 41, 1),
       ),
       body: Padding(
@@ -23,7 +26,7 @@ class SettingsScreen extends StatelessWidget {
             const SizedBox(height: 20), 
             ElevatedButton(
               onPressed: () {
-                deleteDuffy();
+                fManager.deleteDuffy();
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -43,11 +46,12 @@ class SettingsScreen extends StatelessWidget {
             const SizedBox(height: 30),
             ElevatedButton(
               onPressed: () {
-                signOut();
+                
+                fManager.signOut();
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const SignInScreen()));
+                      builder: (context) => SignInScreen()));
             
               },
               child: const Text('Cerrar sesión'),
