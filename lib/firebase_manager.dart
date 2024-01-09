@@ -13,11 +13,36 @@ class FirebaseManager {
 
   FirebaseStorage storage = FirebaseStorage.instance;
 
+  Future<void> saveAppOpenTime() async {
+    var userID = auth.currentUser?.uid;
+    if (userID != null) {
+      var userActivityRef = db.collection('duffy').doc(userID);
+      var now = DateTime.now();
+
+      return userActivityRef.set({
+        'Last_connection': now,
+        // Puedes incluir otros datos aquí si lo deseas
+      }, SetOptions(merge: true));
+    }
+  }
+
+  Future<void> signOut() async {
+    try {
+      await auth.signOut();
+    } catch (e) {
+      print("Error al cerrar sesión: $e");
+    }
+  }
+
+  static bool isSignedIn() {
+    return FirebaseAuth.instance.currentUser?.uid != null;
+  }
+
+
   Future<List<String>> getImagesURL(folderPath) async {
     // Get a reference to the folder
     Reference folderRef = storage.ref().child(folderPath);
     List<String> urlList = [];
-
     ListResult result = await folderRef.listAll();
 
       for (Reference item in result.items) {
@@ -65,12 +90,46 @@ class FirebaseManager {
     return duffyAccessories;
   }
 
-  void updateDuckinessWithSwipes() {
-    //get ducks duckiness
+  Future<void> updateSoldBool(bought, name, isGotten) async {
+
+    var ref = db.collection("duffy").doc(auth.currentUser?.uid);
+
+    await ref.update({
+      "Accessories": FieldValue.arrayRemove([{"gotten": isGotten, "name": name, "sold": !bought}]),
+    }).then(
+          (value) => print("1.DocumentSnapshot successfully updated!"),
+      onError: (e) => print("1.Error updating document $e"),
+    );
+
+    await ref.update({
+        "Accessories": FieldValue.arrayUnion([{"gotten": true, "name": name, "sold": bought}]),
+        }).then(
+            (value) => print("2.DocumentSnapshot successfully updated!"),
+          onError: (e) => print("2.Error updating document $e"),
+    );
 
   }
 
-  void getCoordsByCity(){
+  Future<void> updateAccessoryImage(accessoryImage) async {
+    var ref = db.collection("duffy").doc(auth.currentUser?.uid);
+
+    await ref.update({
+      "Outfit": accessoryImage,
+    }).then(
+          (value) => print("DocumentSnapshot successfully updated!"),
+      onError: (e) => print("Error updating document $e"),
+    );
+  }
+
+  Future<void> incrementDuffyField(field, quantity) async {
+    var ref = db.collection("duffy").doc(auth.currentUser?.uid);
+
+    await ref.update({
+      field: FieldValue.increment(quantity),
+    }).then(
+          (value) => print("5.DocumentSnapshot successfully updated!"),
+      onError: (e) => print("5.Error updating document $e"),
+    );
 
   }
 
@@ -80,7 +139,6 @@ class FirebaseManager {
     Duffy duffy;
     final doc = await db.collection("duffy").doc(userId).get();
     duffy = Duffy.fromFirestore(doc);
-
     return duffy;
   }
 

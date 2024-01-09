@@ -4,11 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto_ddm2/DuffyAccessory.dart';
 import 'package:proyecto_ddm2/firebase_manager.dart';
-import 'package:proyecto_ddm2/DuffyAccessory.dart';
-import 'package:proyecto_ddm2/firebase_manager.dart';
-import 'package:proyecto_ddm2/main_duck_screen.dart';
+import 'package:proyecto_ddm2/signin_screen.dart';
 
-Future<void> addDuffy(String name, String location, String outfit, double coins, double duckiness, int life, List<DuffyAccessory> accessories, String color) async {
+Future<void> addDuffy(String name, String location, String outfit, int coins, double duckiness, int life, List<DuffyAccessory> accessories, String color) async {
   var userID = FirebaseAuth.instance.currentUser!.uid;
   var duffyRef = FirebaseFirestore.instance.collection('duffy').doc(userID);
 
@@ -21,7 +19,7 @@ Future<void> addDuffy(String name, String location, String outfit, double coins,
     'Duckiness': duckiness,
     'Life': life,
     'Accessories': accessoriesMap,  
-    'Last_connection': DateTime.timestamp(), 
+    'Last_connection': DateTime.now(),
     'Color': color,
   });
 }
@@ -52,7 +50,7 @@ String getImageUrl(DuckColor outfit) {
   }
 }
 
-const List<String> cities = <String>['Alaska', 'Barcelona', 'Egipto', 'Los Angeles', 'Paris'];
+const List<String> cities = <String>['Alaska', 'Barcelona', 'El Cairo', 'Los Angeles', 'Paris'];
 
 class _DuckCreatorState extends State<DuckCreator> {
   TextEditingController _duffyNameController = TextEditingController();
@@ -192,7 +190,7 @@ class _DuckCreatorState extends State<DuckCreator> {
                 
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const MainDuck()),
+                  MaterialPageRoute(builder: (context) => const SignInScreen()),
                 );
                 _createDuffy();
                },
@@ -236,7 +234,7 @@ void _createDuffy() async {
       List<DuffyAccessory> defaultAccessories = await fManager.getDefaultAccessories();
 
 
-      await addDuffy(name, location, outfit, 0.0, 100.0, 0, defaultAccessories, color);
+      await addDuffy(name, location, outfit, 0, 100.0, 0, defaultAccessories, color);
     } catch (error) {
       
       print('Error al crear o actualizar Duffy: $error');
@@ -244,62 +242,3 @@ void _createDuffy() async {
   } 
 }
 }
-
-
-
-// class Duffy {
-//   final String name;
-//   final String location;
-//   final String outfit;
-//   final double coins;
-//   final double life;
-//   final double duckiness;
-// class Duffy {
-//   final String name;
-//   final String location;
-//   final String outfit;
-//   final double coins;
-//   final double life;
-//   final double duckiness;
-
-//   Duffy({required this.name, required this.location, required this.outfit, required this.coins, required this.life, required this.duckiness});
-//   Duffy({required this.name, required this.location, required this.outfit, required this.coins, required this.life, required this.duckiness});
-
-//   factory Duffy.fromFirestore(DocumentSnapshot doc) {
-//   Map data = doc.data() as Map<String, dynamic>;
-//   return Duffy(
-//     name: data['Name'] ?? '', 
-//     location: data['Location'] ?? '',
-//     outfit: data['Outfit'] ?? '',
-//     coins: data['Coins']?.toDouble() ?? 0.0, 
-//     life: data['Life']?.toDouble() ?? 100.0,
-//     duckiness: data['Duckiness']?.toDouble() ?? 0.0,
-//   );
-// }
-// }
-
-// Future<void> addDuffy(
-//   String name,
-//   String location,
-//   String outfit,
-//   double coins,
-//   double duckiness,
-//   double life,
-//   List<DuffyAccessory> accessories
-// ) async {
-//   var userID = FirebaseAuth.instance.currentUser!.uid;
-//   var duffyRef = FirebaseFirestore.instance.collection('duffy').doc(userID);
-
-//   // Convierte cada DuffyAccessory en un mapa
-//   var accessoriesMap = accessories.map((accessory) => accessory.toFirestore()).toList();
-
-//   return duffyRef.set({
-//     'Name': name,
-//     'Location': location,
-//     'Outfit': outfit,
-//     'Coins': coins,
-//     'Duckiness': duckiness,
-//     'Life': life,
-//     'Accessories': accessoriesMap, // Agrega la lista de accesorios como mapa
-//   });
-// }
