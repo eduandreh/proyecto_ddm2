@@ -51,13 +51,14 @@ class _MainDuck extends State<MainDuck> {
 
   void _incrementSwipes() {
     _swipes = _swipes + 1;
-    if (_swipes == 3) {
+    if (_swipes == 10) {
       fManager.incrementDuffyField("Coins", 1);
-      fManager.incrementDuffyField("Duckiness", 0.5);
-      _swipes = 0;
       _mallardsNotifier.value = _mallardsNotifier.value! + 1;
-      _duckinessNotifier.value = _duckinessNotifier.value! + 1;
-
+      if(_duckinessNotifier.value! < 100) {
+        fManager.incrementDuffyField("Duckiness", 0.5);
+        _duckinessNotifier.value = _duckinessNotifier.value! + 0.5;
+      }
+      _swipes = 0;
     }
   }
 
