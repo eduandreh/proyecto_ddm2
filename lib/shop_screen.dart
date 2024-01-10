@@ -6,7 +6,9 @@ import 'firebase_manager.dart';
 
 class ShopScreen extends StatefulWidget {
   const ShopScreen({super.key, required this.onDuckUpdated});
+
   final Function(Duffy? duffy) onDuckUpdated;
+
   @override
   State<ShopScreen> createState() => _ShopScreen();
 }
@@ -91,7 +93,7 @@ class _ShopScreen extends State<ShopScreen> {
     await updateAccessoryImage(index);
   }
 
-  void buyAccessory(index) async {
+  bool isBallLocked() {
     var isLocked = 0;
 
     //verify locked accessory (ball) by looking all objects
@@ -101,35 +103,47 @@ class _ShopScreen extends State<ShopScreen> {
       }
     }
 
-    if (shopObjects[index].price <= _duffy!.coins) {
-      //verify if enough mallards
-      //verification of locked object
-      if (duffyObjects[index].name == "5ball") {
-        if (isLocked >= 4) {
-          //we need to know if the other 4 objects are gotten
+    return isLocked >= 4;
+  }
+
+  void buyAccessory(index) async {
+    //verification of locked object
+    if (duffyObjects[index].name == "5ball") {
+      if (isBallLocked()) {
+        //we need to know if the other 4 objects are gotten
+        if (shopObjects[index].price <= _duffy!.coins) {
+          //verify if enough mallards
           await updateSoldObject(index);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('No se han comprado los previos objetos.'),
+              content: Text('No tienes suficientes Mallards!'),
             ),
           );
         }
       } else {
-        //not trying to buy the locked object
-        await updateSoldObject(index);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('No se han comprado los previos objetos.'),
+          ),
+        );
       }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('No tienes suficientes Mallards!'),
-        ),
-      );
+      //not trying to buy the locked object
+      if (shopObjects[index].price <= _duffy!.coins) {
+        //verify if enough mallards
+        await updateSoldObject(index);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('No tienes suficientes Mallards!'),
+          ),
+        );
+      }
     }
 
-    getInfo();
+    getInfo(); //update shop with new bought object
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -139,7 +153,7 @@ class _ShopScreen extends State<ShopScreen> {
             leading: BackButton(
               onPressed: () {
                 widget.onDuckUpdated(_duffy);
-                Navigator.pop(context);
+                Navigator.popUntil(context, (route) => route.isFirst);
               },
               color: Colors.black,
             ),
@@ -191,7 +205,7 @@ class _ShopScreen extends State<ShopScreen> {
               Visibility(
                 visible: shopObjects.isEmpty,
                 child: Image(
-                  image: Image.asset(  //placeholder
+                  image: Image.asset(//placeholder
                       "assets/placeholders/duck_shop_placeHolder.png").image,
                   width: 400,
                 ),
@@ -217,7 +231,7 @@ class _ShopScreen extends State<ShopScreen> {
                             Image(
                               image: shopObjects.isNotEmpty
                                   ? NetworkImage(shopObjects[index].image)
-                                  : Image.asset(  //placeholder
+                                  : Image.asset(//placeholder
                                           "assets/placeholders/duck_shop_placeHolder.png")
                                       .image,
                               width: 101,
@@ -271,13 +285,21 @@ class _ShopScreen extends State<ShopScreen> {
                                               Color(0xff236A26)),
                                     ),
                                     child: Row(children: [
-                                      const Text("Comprar"),
+                                      Text(duffyObjects[index].sold
+                                          ? "Usando"
+                                          : duffyObjects[index].gotten
+                                              ? "Recomprar"
+                                              : "Comprar"),
                                       const SizedBox(width: 4),
                                       Image(
                                         //shopping cart icon
-                                        image: Image.asset(
-                                                "assets/icons/shopping_cart.png")
-                                            .image,
+                                        image: isBallLocked() || index != 4
+                                            ? Image.asset(
+                                                    "assets/icons/shopping_cart.png")
+                                                .image
+                                            : Image.asset(
+                                                    "assets/icons/lock.png")
+                                                .image,
                                         width: 24,
                                       ),
                                     ]))
