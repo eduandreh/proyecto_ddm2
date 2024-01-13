@@ -26,6 +26,17 @@ class FirebaseManager {
     }
   }
 
+  Future <void> saveDuffyLife(life) async {
+    var userID = auth.currentUser?.uid;
+    if (userID != null) {
+      var userActivityRef = db.collection('duffy').doc(userID);
+      return userActivityRef.set({
+        'Life': life,
+        // Puedes incluir otros datos aquí si lo deseas
+      }, SetOptions(merge: true));
+    }
+  }
+
   Future<void> signOut() async {
     try {
       await auth.signOut();
