@@ -71,14 +71,6 @@ class _MainDuck extends State<MainDuck> {
     fManager.saveDuffyLife(days);
   }
 
-  void lifeCheck() async {
-    Duration difference = DateTime.now()
-        .difference(DateTime.parse(duffy!.created_at.toDate().toString()));
-
-    int days = difference.inDays;
-    fManager.saveDuffyLife(days);
-  }
-
   Future<void> updateDuckiness(Duffy duffy, String weather) async {
     Duration difference = DateTime.now()
         .difference(DateTime.parse(duffy.lastConnection.toDate().toString()));
