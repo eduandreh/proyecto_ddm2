@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:proyecto_ddm2/migration_screen.dart';
 import 'package:proyecto_ddm2/settings_screen.dart';
 import 'package:proyecto_ddm2/shop_screen.dart';
 import 'package:proyecto_ddm2/signin_screen.dart';
@@ -96,7 +97,13 @@ class _MainDuck extends State<MainDuck> {
       } else {
         await fManager.incrementDuffyField("Duckiness", -duffy.duckiness);
       }
+    
+  }
+  duffy = await fManager.getDuck();
+      if(duffy.duckiness == 0) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => MigrationScreen()));
     }
+    
   }
 
   @override
@@ -234,7 +241,8 @@ class _MainDuck extends State<MainDuck> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text("Duckiness"),
-            content: Text("Duckiness es la felicidad de tu Duffy. Mantenlo contento, equipandolo con el accesorio correcto, para que tu Duffy emigre!"),
+            content: Text("Duckiness representa la felicidad de tu Duffy.\nPara mantener a tu Duffy feliz y evitar que emigre, es crucial equiparlo con el accesorio adecuado y acariciarlo regularmente. \n¡Elige con cuidado y asegúrate de que tu Duffy se sienta siempre contento!"),
+
             actions: [
               TextButton(
                 child: Text("Cerrar"),

@@ -16,6 +16,7 @@ FirebaseManager fManager = FirebaseManager();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(221, 138, 41, 1),
+        title: const Text('Ajustes'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(10.0), 
