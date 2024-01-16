@@ -20,6 +20,7 @@ Future<void> addDuffy(String name, String location, String outfit, int coins, do
     'Life': life,
     'Accessories': accessoriesMap,  
     'Last_connection': DateTime.now(),
+    'Created_at': DateTime.now(),
     'Color': color,
   });
 }

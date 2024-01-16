@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:proyecto_ddm2/migration_screen.dart';
+import 'package:proyecto_ddm2/settings_screen.dart';
 import 'package:proyecto_ddm2/shop_screen.dart';
 import 'package:proyecto_ddm2/signin_screen.dart';
 import 'package:proyecto_ddm2/weather_api_manager.dart';
@@ -20,8 +22,6 @@ class _MainDuck extends State<MainDuck> {
 
   late Duffy? duffy;
   late String? weather;
-  //late int? _mallards;
-  //late double? _duckiness;
 
   late ValueNotifier<int?> _mallardsNotifier;
   late ValueNotifier<double?> _duckinessNotifier;
@@ -33,13 +33,13 @@ class _MainDuck extends State<MainDuck> {
     getImages();
     _mallardsNotifier = ValueNotifier<int?>(0);
     _duckinessNotifier = ValueNotifier<double?>(100.0);
-
   }
 
   Future<void> getDuffy() async {
     duffy = await fManager.getDuck();
     weather = await getCurrentWeather(duffy!.location);
     await updateDuckiness(duffy!, weather!);
+    lifeCheck();
     duffy = await fManager.getDuck();
     _mallardsNotifier.value = duffy!.mallards;
    _duckinessNotifier.value = duffy!.duckiness;
@@ -60,6 +60,14 @@ class _MainDuck extends State<MainDuck> {
       }
       _swipes = 0;
     }
+  }
+
+  void lifeCheck() async {
+    Duration difference = DateTime.now()
+        .difference(DateTime.parse(duffy!.created_at.toDate().toString()));
+
+    int days = difference.inDays;
+    fManager.saveDuffyLife(days);
   }
 
   Future<void> updateDuckiness(Duffy duffy, String weather) async {
@@ -87,7 +95,13 @@ class _MainDuck extends State<MainDuck> {
       } else {
         await fManager.incrementDuffyField("Duckiness", -duffy.duckiness);
       }
+
+  }
+  duffy = await fManager.getDuck();
+      if(duffy.duckiness == 0) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => MigrationScreen()));
     }
+
   }
 
   @override
@@ -108,10 +122,9 @@ class _MainDuck extends State<MainDuck> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const SignInScreen()));
+                              builder: (context) => SettingsScreen()));
                     },
-                    icon: const Icon(Icons.logout_rounded,
-                        color: Color(0xffDD8A29)),
+                    icon: const Icon(Icons.settings, color: Color(0xffDD8A29)),
                   ),
                   leadingWidth: 50,
                   title: Text(
@@ -124,14 +137,36 @@ class _MainDuck extends State<MainDuck> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const SizedBox(width: 30),
-                        Transform.rotate(
-                          angle: 3.14159 / 2,
-                          child: const Text(
-                            'M',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xff9C4615),
+                        GestureDetector(
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text("Mallards"),
+                                  content: Text(
+                                      "Los Mallards son monedas que puedes intercambiar por accesorios. ¡Consigue más Mallards acariciando a tu Duffy!"),
+                                  actions: [
+                                    TextButton(
+                                      child: Text("Cerrar"),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                          child: Transform.rotate(
+                            angle: 3.14159 / 2,
+                            child: const Text(
+                              'M',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xff9C4615),
+                              ),
                             ),
                           ),
                         ),
@@ -148,9 +183,9 @@ class _MainDuck extends State<MainDuck> {
                             );
                           },
                         ),
-                        const SizedBox(width: 16),
                       ],
-                    )
+                    ),
+                    const SizedBox(width: 10),
                   ]),
               body: Center(
                   child:
@@ -186,6 +221,7 @@ class _MainDuck extends State<MainDuck> {
                           //progress bar
                           Stack(
                             children: <Widget>[
+
                               Align(
                                 alignment: Alignment.topCenter,
                                 child: SizedBox(
@@ -195,13 +231,14 @@ class _MainDuck extends State<MainDuck> {
                                     valueListenable: _duckinessNotifier,
                                     builder: (context, duckiness, _) {
                                       return LinearProgressIndicator(
-                                        value: duckiness == 0.0 || duckiness == null
+                                        value: duckiness == 0.0 ||
+                                                duckiness == null
                                             ? 0.0
                                             : duckiness / 100,
                                         backgroundColor: Colors.grey[300],
                                         valueColor:
-                                        const AlwaysStoppedAnimation<Color>(
-                                            Color(0xffDD8A29)),
+                                            const AlwaysStoppedAnimation<Color>(
+                                                Color(0xffDD8A29)),
                                         borderRadius: const BorderRadius.all(
                                             Radius.circular(30)),
                                       );
@@ -209,33 +246,81 @@ class _MainDuck extends State<MainDuck> {
                                   ),
                                 ),
                               ),
-                              const Align(
-                                alignment: Alignment.center,
-                                child: Text(
-                                  "DUCKINESS",
-                                  style: TextStyle(
-                                      color: Color(0xff236A26),
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 20),
-                                ),
-                              )
+                              Align(
+  alignment: Alignment.center,
+  child: GestureDetector(
+    onTap: () {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Duckiness"),
+            content: Text("Duckiness representa la felicidad de tu Duffy.\nPara mantener a tu Duffy feliz y evitar que emigre, es crucial equiparlo con el accesorio adecuado y acariciarlo regularmente. \n¡Elige con cuidado y asegúrate de que tu Duffy se sienta siempre contento!"),
+
+            actions: [
+              TextButton(
+                child: Text("Cerrar"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    },
+    child: const Text(
+      "DUCKINESS",
+      style: TextStyle(
+        color: Color(0xff236A26),
+        fontWeight: FontWeight.w400,
+        fontSize: 20,
+      ),
+    ),
+  ),
+),
                             ],
                           ),
-
-                          const SizedBox(height: 10),
-                          Text(duffy!.name,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 32,
-                              )),
+                          const SizedBox(height: 20),
 
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              const Text("D",
+                              const SizedBox(height: 10),
+                              Text(duffy!.name,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 32,
+                                  )),
+                              const SizedBox(width: 50),
+                              GestureDetector(
+                                onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text("Días de Vida de tu Duffy"),
+                                        content: Text(
+                                            "¡Manten contento a tu Duffy para que viva más!"),
+                                        actions: [
+                                          TextButton(
+                                            child: Text("Cerrar"),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
+                                child: const Text(
+                                  "D",
                                   style: TextStyle(
-                                      fontSize: 24, color: Color(0xff9C4615))),
-                              const SizedBox(width: 12),
+                                      fontSize: 24, color: Color(0xff9C4615)),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
                               Text(
                                   duffy!.life != 0
                                       ? duffy!.life.toString()
@@ -246,6 +331,7 @@ class _MainDuck extends State<MainDuck> {
                                   )),
                             ],
                           ),
+                          const SizedBox(height: 20),
 
                           Stack(
                             children: <Widget>[
@@ -295,7 +381,8 @@ class _MainDuck extends State<MainDuck> {
                         )),
                     IconButton(
                       icon: const Icon(Icons.add_business),
-                      color: Colors.orangeAccent,
+                      color: const Color.fromARGB(255, 8, 5, 0),
+                      iconSize: 30,
                       onPressed: () async {
                         await Navigator.push(
                             context,
@@ -332,4 +419,3 @@ class _MainDuck extends State<MainDuck> {
     super.dispose();
   }
 }
-
