@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:proyecto_ddm2/DuffyAccessory.dart';
 
 class Duffy {
@@ -11,10 +12,11 @@ class Duffy {
   final String color;
   dynamic accessories = List<DuffyAccessory>;
   final Timestamp lastConnection;
+  final Timestamp created_at;
 
 
   Duffy(
-      {required this.name, required this.location, required this.outfit, required this.coins, required this.life, required this.duckiness, required this.accessories, required this.color, required this.lastConnection});
+      {required this.name, required this.location, required this.outfit, required this.coins, required this.life, required this.duckiness, required this.accessories, required this.color, required this.lastConnection, required this.created_at});
 
   factory Duffy.fromFirestore(DocumentSnapshot doc) {
     Map data = doc.data() as Map<String, dynamic>;
@@ -26,8 +28,13 @@ class Duffy {
       life: data['Life'] ?? 100,
       duckiness: data['Duckiness']?.toDouble() ?? 0.0,
       lastConnection: data['Last_connection'] ?? '',
+      created_at: data['Created_at'] ?? '',
       color: data['Color'] ?? '',
       accessories: data['Accessories'] ?? [],
     );
   }
 }
+
+
+
+

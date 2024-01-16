@@ -153,7 +153,7 @@ class _ShopScreen extends State<ShopScreen> {
             leading: BackButton(
               onPressed: () {
                 widget.onDuckUpdated(_duffy);
-                Navigator.popUntil(context, (route) => route.isFirst);
+                Navigator.pop(context);
               },
               color: Colors.black,
             ),

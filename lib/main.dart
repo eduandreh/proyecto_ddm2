@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromRGBO(221, 138, 41, 1)),
         useMaterial3: true,
       ),
-      home: FirebaseManager.isSignedIn() ? const MainDuck() : const SignInScreen(),
+      home: const SignInScreen(),
     );
   }
 }
