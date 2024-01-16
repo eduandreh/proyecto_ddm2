@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:proyecto_ddm2/migration_screen.dart';
 import 'package:proyecto_ddm2/settings_screen.dart';
 import 'package:proyecto_ddm2/shop_screen.dart';
+import 'package:proyecto_ddm2/tutorial.dart';
 import 'package:proyecto_ddm2/weather_api_manager.dart';
 import 'Duffy.dart';
 import 'firebase_manager.dart';
@@ -111,6 +112,7 @@ class _MainDuck extends State<MainDuck> {
               backgroundImages.isNotEmpty) {
             return Scaffold(
               appBar: AppBar(
+                  backgroundColor: Colors.black87,
                   centerTitle: true,
                   bottom: const PreferredSize(
                       preferredSize: Size.fromHeight(0), child: SizedBox()),
@@ -130,7 +132,7 @@ class _MainDuck extends State<MainDuck> {
                       Text(
                         duffy!.location,
                         style: const TextStyle(
-                            fontSize: 18, color: Color(0xff7e7e7e)),
+                            fontSize: 18, color: Color(0xffdaa15e)),
                       ),
                       const SizedBox(height: 5),
                       Image.asset(
@@ -174,7 +176,7 @@ class _MainDuck extends State<MainDuck> {
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xff9C4615),
+                                color: Color(0xffDD8A29),
                               ),
                             ),
                           ),
@@ -186,6 +188,7 @@ class _MainDuck extends State<MainDuck> {
                             return Text(
                               mallards?.toString() ?? '',
                               style: const TextStyle(
+                                color: Color(0xffdaa15e),
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -275,8 +278,8 @@ class _MainDuck extends State<MainDuck> {
                                       child: const Text(
                                         "DUCKINESS",
                                         style: TextStyle(
-                                          color: Color(0xff236A26),
-                                          fontWeight: FontWeight.w400,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w500,
                                           fontSize: 20,
                                         ),
                                       ),
@@ -376,19 +379,26 @@ class _MainDuck extends State<MainDuck> {
                 ],
               )),
               bottomNavigationBar: BottomAppBar(
-                color: const Color(0xffBBDBBC),
+
+                color: Colors.black87,
                 child: Row(
-                  mainAxisSize: MainAxisSize.max,
+                  mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    const Text("Let your Duffy be!",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 20,
-                        )),
+                    IconButton(
+                      icon: const Icon(Icons.info_outline),
+                      color: const Color.fromARGB(255, 255, 255, 255),
+                      iconSize: 30,
+                      onPressed: () async {
+                        await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                            builder: (context) => const TutorialScreen()));
+                      },
+                    ),
                     IconButton(
                       icon: const Icon(Icons.add_business),
-                      color: const Color.fromARGB(255, 8, 5, 0),
+                      color: const Color.fromARGB(255, 255, 255, 255),
                       iconSize: 30,
                       onPressed: () async {
                         await Navigator.push(
