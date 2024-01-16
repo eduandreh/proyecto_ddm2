@@ -6,16 +6,16 @@ import 'package:proyecto_ddm2/DuffyAccessory.dart';
 import 'package:proyecto_ddm2/firebase_manager.dart';
 import 'package:proyecto_ddm2/signin_screen.dart';
 
-Future<void> addDuffy(String name, String location, String outfit, int coins, double duckiness, int life, List<DuffyAccessory> accessories, String color) async {
+Future<void> addDuffy(String name, String location, String outfit, int mallards, double duckiness, int life, List<DuffyAccessory> accessories, String color) async {
   var userID = FirebaseAuth.instance.currentUser!.uid;
-  var duffyRef = FirebaseFirestore.instance.collection('duffy').doc(userID);
+  var duffyRef = FirebaseFirestore.instance.collection('users').doc(userID);
 
  var accessoriesMap = accessories.map((accessory) => accessory.toFirestore()).toList();
   return duffyRef.set({
     'Name': name,
     'Location': location,
     'Outfit': outfit,
-    'Coins': coins,
+    'Mallards': mallards,
     'Duckiness': duckiness,
     'Life': life,
     'Accessories': accessoriesMap,  

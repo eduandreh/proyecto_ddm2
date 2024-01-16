@@ -16,7 +16,7 @@ class FirebaseManager {
   Future<void> saveAppOpenTime() async {
     var userID = auth.currentUser?.uid;
     if (userID != null) {
-      var userActivityRef = db.collection('duffy').doc(userID);
+      var userActivityRef = db.collection('users').doc(userID);
       var now = DateTime.now();
 
       return userActivityRef.set({
@@ -29,7 +29,7 @@ class FirebaseManager {
   Future <void> saveDuffyLife(life) async {
     var userID = auth.currentUser?.uid;
     if (userID != null) {
-      var userActivityRef = db.collection('duffy').doc(userID);
+      var userActivityRef = db.collection('users').doc(userID);
       return userActivityRef.set({
         'Life': life,
         // Puedes incluir otros datos aquí si lo deseas
@@ -52,7 +52,7 @@ class FirebaseManager {
 Future<void> deleteDuffy() async {
   var userID = FirebaseAuth.instance.currentUser?.uid;
   if (userID != null) {
-    var userActivityRef = FirebaseFirestore.instance.collection('duffy').doc(userID);
+    var userActivityRef = FirebaseFirestore.instance.collection('users').doc(userID);
     return userActivityRef.delete();
   }
 }
@@ -110,7 +110,7 @@ Future<void> deleteDuffy() async {
 
   Future<void> updateSoldBool(bought, name, isGotten) async {
 
-    var ref = db.collection("duffy").doc(auth.currentUser?.uid);
+    var ref = db.collection("users").doc(auth.currentUser?.uid);
 
     await ref.update({
       "Accessories": FieldValue.arrayRemove([{"gotten": isGotten, "name": name, "sold": !bought}]),
@@ -129,7 +129,7 @@ Future<void> deleteDuffy() async {
   }
 
   Future<void> updateAccessoryImage(accessoryImage) async {
-    var ref = db.collection("duffy").doc(auth.currentUser?.uid);
+    var ref = db.collection("users").doc(auth.currentUser?.uid);
 
     await ref.update({
       "Outfit": accessoryImage,
@@ -140,7 +140,7 @@ Future<void> deleteDuffy() async {
   }
 
   Future<void> incrementDuffyField(field, quantity) async {
-    var ref = db.collection("duffy").doc(auth.currentUser?.uid);
+    var ref = db.collection("users").doc(auth.currentUser?.uid);
 
     await ref.update({
       field: FieldValue.increment(quantity),
@@ -152,13 +152,12 @@ Future<void> deleteDuffy() async {
   }
 
   Future<Duffy> getDuck() async {
-    var userId = auth.currentUser!.uid;
 
+    var userId = auth.currentUser!.uid;
+    print("userrrrr -> $userId");
     Duffy duffy;
-    final doc = await db.collection("duffy").doc(userId).get();
+    final doc = await db.collection("users").doc(userId).get();
     duffy = Duffy.fromFirestore(doc);
     return duffy;
   }
-
-
 }
