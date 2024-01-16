@@ -89,7 +89,7 @@ class _ShopScreen extends State<ShopScreen> {
         true, duffyObjects[index].name, duffyObjects[index].gotten);
 
     //update Mallards
-    await fManager.incrementDuffyField("Coins", -shopObjects[index].price);
+    await fManager.incrementDuffyField("Mallards", -shopObjects[index].price);
     await updateAccessoryImage(index);
   }
 
@@ -111,7 +111,7 @@ class _ShopScreen extends State<ShopScreen> {
     if (duffyObjects[index].name == "5ball") {
       if (isBallLocked()) {
         //we need to know if the other 4 objects are gotten
-        if (shopObjects[index].price <= _duffy!.coins) {
+        if (shopObjects[index].price <= _duffy!.mallards) {
           //verify if enough mallards
           await updateSoldObject(index);
         } else {
@@ -130,7 +130,7 @@ class _ShopScreen extends State<ShopScreen> {
       }
     } else {
       //not trying to buy the locked object
-      if (shopObjects[index].price <= _duffy!.coins) {
+      if (shopObjects[index].price <= _duffy!.mallards) {
         //verify if enough mallards
         await updateSoldObject(index);
       } else {
@@ -174,7 +174,7 @@ class _ShopScreen extends State<ShopScreen> {
                 ),
                 const SizedBox(width: 2),
                 Text(
-                  _duffy == null ? "000" : _duffy!.coins.toString(),
+                  _duffy == null ? "000" : _duffy!.mallards.toString(),
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
