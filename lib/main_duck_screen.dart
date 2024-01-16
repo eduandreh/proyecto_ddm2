@@ -41,7 +41,7 @@ class _MainDuck extends State<MainDuck> {
     weather = await getCurrentWeather(duffy!.location);
     await updateDuckiness(duffy!, weather!);
     duffy = await fManager.getDuck();
-    _mallardsNotifier.value = duffy!.coins;
+    _mallardsNotifier.value = duffy!.mallards;
    _duckinessNotifier.value = duffy!.duckiness;
   }
 
@@ -52,7 +52,7 @@ class _MainDuck extends State<MainDuck> {
   void _incrementSwipes() {
     _swipes = _swipes + 1;
     if (_swipes == 10) {
-      fManager.incrementDuffyField("Coins", 1);
+      fManager.incrementDuffyField("Mallards", 1);
       _mallardsNotifier.value = _mallardsNotifier.value! + 1;
       if(_duckinessNotifier.value! < 100) {
         fManager.incrementDuffyField("Duckiness", 0.5);
@@ -153,7 +153,23 @@ class _MainDuck extends State<MainDuck> {
                     )
                   ]),
               body: Center(
-                  child: Column(
+                  child:
+                  Stack(fit: StackFit.expand, children: [
+                    Align(
+                        alignment: Alignment.topCenter,
+                        child: Visibility(
+                            visible: backgroundImages.isNotEmpty
+                                ? true
+                                : false,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: NetworkImage(backgroundImages[0]),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),)),),
+
+                  Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                     //weather icon
@@ -233,14 +249,7 @@ class _MainDuck extends State<MainDuck> {
 
                           Stack(
                             children: <Widget>[
-                              Align(
-                                  alignment: Alignment.topCenter,
-                                  child: Visibility(
-                                      visible: backgroundImages.isNotEmpty
-                                          ? true
-                                          : false,
-                                      child: Image.network(backgroundImages[0],
-                                          width: 380))),
+
                               SizedBox(
                                 height: 350,
                                 child: Align(
@@ -269,7 +278,10 @@ class _MainDuck extends State<MainDuck> {
                             ],
                           ),
                         ])
-                  ])),
+                  ])
+                  ],
+                  )
+              ),
               bottomNavigationBar: BottomAppBar(
                 color: const Color(0xffBBDBBC),
                 child: Row(
