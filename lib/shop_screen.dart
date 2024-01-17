@@ -249,7 +249,7 @@ class _ShopScreen extends State<ShopScreen> {
                                           .image,
                                       width: 24,
                                     ),
-                                    const SizedBox(width: 30),
+                                    const SizedBox(width: 15),
                                     Transform.rotate(
                                       angle: 3.14159 / 2,
                                       child: const Text(
