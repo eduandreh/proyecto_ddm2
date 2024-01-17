@@ -70,6 +70,15 @@ Future<void> deleteDuffy() async {
     return urlList;
   }
 
+  Future<String> getSpecificFile(folderPath,file) async {
+    // Get a reference to the folder
+    Reference folderRef = storage.ref().child(folderPath);
+    String urlFile =
+    await folderRef.child("/$file.png").getDownloadURL();
+
+    return urlFile;
+  }
+
   Future<List<Shop>> getShop() async {
     List<Shop> shopObjects = [];
 
