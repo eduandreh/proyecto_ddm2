@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:proyecto_ddm2/migration_screen.dart';
 import 'package:proyecto_ddm2/settings_screen.dart';
 import 'package:proyecto_ddm2/shop_screen.dart';
-import 'package:proyecto_ddm2/tutorial.dart';
+import 'package:proyecto_ddm2/tutorial_screen.dart';
 import 'package:proyecto_ddm2/weather_api_manager.dart';
 import 'Duffy.dart';
 import 'firebase_manager.dart';
@@ -118,7 +118,6 @@ class _MainDuck extends State<MainDuck> {
                       preferredSize: Size.fromHeight(0), child: SizedBox()),
                   leading: IconButton(
                     onPressed: () {
-                      fManager.signOut();
                       Navigator.push(
                           context,
                           MaterialPageRoute(

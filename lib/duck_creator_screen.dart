@@ -8,7 +8,7 @@ import 'package:proyecto_ddm2/signin_screen.dart';
 
 Future<void> addDuffy(String name, String location, String outfit, int mallards, double duckiness, int life, List<DuffyAccessory> accessories, String color) async {
   var userID = FirebaseAuth.instance.currentUser!.uid;
-  var duffyRef = FirebaseFirestore.instance.collection('users').doc(userID);
+  var duffyRef = FirebaseFirestore.instance.collection("users").doc(userID);
 
  var accessoriesMap = accessories.map((accessory) => accessory.toFirestore()).toList();
   return duffyRef.set({
@@ -112,7 +112,7 @@ class _DuckCreatorState extends State<DuckCreator> {
               
             ),
             
-            backgroundColor: Color.fromRGBO(255, 235, 14, 1),
+            backgroundColor: Color.fromRGBO(252, 243, 38, 1),
           ), child: Container()),
 
           FilledButton(onPressed: () {
@@ -121,7 +121,7 @@ class _DuckCreatorState extends State<DuckCreator> {
           style: FilledButton.styleFrom(
             shape: CircleBorder(
             ),
-            backgroundColor: Color.fromRGBO(219, 14, 255, 1),
+            backgroundColor: Color.fromRGBO(165, 130, 253, 1),
           ), child: Container()),
 
           FilledButton(onPressed: () {
@@ -130,7 +130,7 @@ class _DuckCreatorState extends State<DuckCreator> {
           style: FilledButton.styleFrom(
             shape: CircleBorder(
             ),
-            backgroundColor: Color.fromRGBO(14, 18, 255, 1),
+            backgroundColor: Color.fromRGBO(47, 187, 187, 1),
           ), child: Container()),
 
           FilledButton(onPressed: () {
@@ -139,7 +139,7 @@ class _DuckCreatorState extends State<DuckCreator> {
           style: FilledButton.styleFrom(
             shape: CircleBorder(
             ),
-            backgroundColor: Color.fromRGBO(14, 255, 86, 1),
+            backgroundColor: Color.fromRGBO(30, 176, 89, 1),
           ), child: Container()),
 
           ]

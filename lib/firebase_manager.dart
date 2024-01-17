@@ -16,12 +16,11 @@ class FirebaseManager {
   Future<void> saveAppOpenTime() async {
     var userID = auth.currentUser?.uid;
     if (userID != null) {
-      var userActivityRef = db.collection('users').doc(userID);
+      var userActivityRef = db.collection("users").doc(userID);
       var now = DateTime.now();
 
       return userActivityRef.set({
         'Last_connection': now,
-        // Puedes incluir otros datos aquí si lo deseas
       }, SetOptions(merge: true));
     }
   }
@@ -29,10 +28,9 @@ class FirebaseManager {
   Future <void> saveDuffyLife(life) async {
     var userID = auth.currentUser?.uid;
     if (userID != null) {
-      var userActivityRef = db.collection('users').doc(userID);
+      var userActivityRef = db.collection("users").doc(userID);
       return userActivityRef.set({
         'Life': life,
-        // Puedes incluir otros datos aquí si lo deseas
       }, SetOptions(merge: true));
     }
   }
@@ -52,7 +50,7 @@ class FirebaseManager {
 Future<void> deleteDuffy() async {
   var userID = FirebaseAuth.instance.currentUser?.uid;
   if (userID != null) {
-    var userActivityRef = FirebaseFirestore.instance.collection('users').doc(userID);
+    var userActivityRef = FirebaseFirestore.instance.collection("users").doc(userID);
     return userActivityRef.delete();
   }
 }

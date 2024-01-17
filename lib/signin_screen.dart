@@ -23,10 +23,10 @@ class _SignInScreenState extends State<SignInScreen> {
       body: Container(
         padding: const EdgeInsets.all(40),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             SizedBox(
-              height: 200,
+              height: 100,
               child: Image(
                   image: Image.asset("assets/placeholders/duckYellow.png").image,
                   height: 100,
