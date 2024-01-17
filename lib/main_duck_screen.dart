@@ -16,12 +16,12 @@ class MainDuck extends StatefulWidget {
 
 class _MainDuck extends State<MainDuck> {
   int _swipes = 0;
-  List<String> backgroundImages = [];
   FirebaseManager fManager = FirebaseManager();
   String swipe = '';
 
   late Duffy? duffy;
   late String? weather;
+  String _backgroundImage = '';
 
   late ValueNotifier<int?> _mallardsNotifier;
   late ValueNotifier<double?> _duckinessNotifier;
@@ -30,7 +30,6 @@ class _MainDuck extends State<MainDuck> {
   void initState() {
     super.initState();
 //    saveAppOpenTime();
-    getImages();
     _mallardsNotifier = ValueNotifier<int?>(0);
     _duckinessNotifier = ValueNotifier<double?>(100.0);
   }
@@ -43,10 +42,7 @@ class _MainDuck extends State<MainDuck> {
     duffy = await fManager.getDuck();
     _mallardsNotifier.value = duffy!.mallards;
     _duckinessNotifier.value = duffy!.duckiness;
-  }
-
-  void getImages() async {
-    backgroundImages = await fManager.getImagesURL("/backgrounds");
+    _backgroundImage = await fManager.getSpecificFile("/backgrounds/", duffy!.location);
   }
 
   void _incrementSwipes() {
@@ -108,8 +104,7 @@ class _MainDuck extends State<MainDuck> {
     return FutureBuilder(
         future: getDuffy(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done &&
-              backgroundImages.isNotEmpty) {
+          if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && _backgroundImage.isNotEmpty) {
             return Scaffold(
               appBar: AppBar(
                   backgroundColor: Colors.black87,
@@ -205,16 +200,14 @@ class _MainDuck extends State<MainDuck> {
                 children: [
                   Align(
                     alignment: Alignment.topCenter,
-                    child: Visibility(
-                        visible: backgroundImages.isNotEmpty ? true : false,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: NetworkImage(backgroundImages[0]),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        )),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: NetworkImage(_backgroundImage),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
                   ),
                   Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -379,7 +372,6 @@ class _MainDuck extends State<MainDuck> {
                 ],
               )),
               bottomNavigationBar: BottomAppBar(
-
                 color: Colors.black87,
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -393,7 +385,7 @@ class _MainDuck extends State<MainDuck> {
                         await Navigator.push(
                             context,
                             MaterialPageRoute(
-                            builder: (context) => const TutorialScreen()));
+                                builder: (context) => const TutorialScreen()));
                       },
                     ),
                     IconButton(

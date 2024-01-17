@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto_ddm2/DuffyAccessory.dart';
 import 'package:proyecto_ddm2/firebase_manager.dart';
-import 'package:proyecto_ddm2/signin_screen.dart';
+import 'package:proyecto_ddm2/main_duck_screen.dart';
 
 Future<void> addDuffy(String name, String location, String outfit, int mallards, double duckiness, int life, List<DuffyAccessory> accessories, String color) async {
   var userID = FirebaseAuth.instance.currentUser!.uid;
@@ -187,13 +187,9 @@ class _DuckCreatorState extends State<DuckCreator> {
     // ),
             const SizedBox(height: 40),
             ElevatedButton(
-               onPressed: () {
-                
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SignInScreen()),
-                );
-                _createDuffy();
+               onPressed: ()  {
+                  _createDuffy();
+
                },
                style: ElevatedButton.styleFrom(
                  primary: const Color.fromRGBO(221, 138, 41, 1),
@@ -222,7 +218,8 @@ class _DuckCreatorState extends State<DuckCreator> {
       ),
     );
   }
-void _createDuffy() async {
+
+Future<void> _createDuffy() async {
   var name = _duffyNameController.text;
   var location = dropdownLocation;
   var outfit = getImageUrl(_selectedColor); 
@@ -236,6 +233,8 @@ void _createDuffy() async {
 
 
       await addDuffy(name, location, outfit, 0, 100.0, 0, defaultAccessories, color);
+      Navigator.push(context, MaterialPageRoute(builder: (context) => MainDuck()));
+
     } catch (error) {
       
       print('Error al crear o actualizar Duffy: $error');
