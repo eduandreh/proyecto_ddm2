@@ -104,7 +104,7 @@ class _MainDuck extends State<MainDuck> {
     return FutureBuilder(
         future: getDuffy(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && _backgroundImage.isNotEmpty) {
+          if (snapshot.connectionState == ConnectionState.done && _backgroundImage.isNotEmpty) {
             return Scaffold(
               appBar: AppBar(
                   backgroundColor: Colors.black87,
