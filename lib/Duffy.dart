@@ -20,7 +20,6 @@ class Duffy {
 
   factory Duffy.fromFirestore(DocumentSnapshot doc) {
     Map<String, dynamic>? data = doc.data() as Map<String, dynamic>?;
-
     if (data == null) {
       throw Exception("Document data is null!");
     }
@@ -31,9 +30,9 @@ class Duffy {
       outfit: data['Outfit'] ?? '',
       mallards: data['Mallards'] ?? 0,
       life: data['Life'] ?? 100,
-      duckiness: (data['Duckiness'] as num?)?.toDouble() ?? 0.0,
-      lastConnection: (data['Last_connection'] as Timestamp?) ?? Timestamp.now(),
-      created_at: (data['Created_at'] as Timestamp?) ?? Timestamp.now(),
+      duckiness: data['Duckiness']?.toDouble() ?? 0.0,
+      lastConnection: data['Last_connection'] ?? '',
+      created_at: data['Created_at'] ?? '',
       color: data['Color'] ?? '',
       accessories: data['Accessories'] ?? [],
     );

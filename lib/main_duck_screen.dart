@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:proyecto_ddm2/migration_screen.dart';
 import 'package:proyecto_ddm2/settings_screen.dart';
 import 'package:proyecto_ddm2/shop_screen.dart';
-import 'package:proyecto_ddm2/tutorial.dart';
+import 'package:proyecto_ddm2/tutorial_screen.dart';
 import 'package:proyecto_ddm2/weather_api_manager.dart';
 import 'Duffy.dart';
 import 'firebase_manager.dart';
@@ -104,7 +104,7 @@ class _MainDuck extends State<MainDuck> {
     return FutureBuilder(
         future: getDuffy(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && _backgroundImage.isNotEmpty) {
+          if (snapshot.connectionState == ConnectionState.done && _backgroundImage.isNotEmpty) {
             return Scaffold(
               appBar: AppBar(
                   backgroundColor: Colors.black87,
