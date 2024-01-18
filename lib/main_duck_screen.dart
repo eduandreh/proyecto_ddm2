@@ -36,7 +36,7 @@ class _MainDuck extends State<MainDuck> {
     _duckinessNotifier = ValueNotifier<double?>(100.0);
   }
 
-  Future<void> getDuffy() async {
+  Future<Duffy> getDuffy() async {
     duffy = await fManager.getDuck();
     weather = await getCurrentWeather(duffy!.location);
     await updateDuckiness(duffy!, weather!);
@@ -45,6 +45,7 @@ class _MainDuck extends State<MainDuck> {
     _mallardsNotifier.value = duffy!.mallards;
     _duckinessNotifier.value = duffy!.duckiness;
     _backgroundImage = await fManager.getSpecificFile("/backgrounds/", duffy!.location);
+    return duffy!;
   }
 
   void _incrementSwipes() {
@@ -115,7 +116,7 @@ class _MainDuck extends State<MainDuck> {
     return FutureBuilder(
         future: getDuffy(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done && _backgroundImage.isNotEmpty) {
+          if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null && _backgroundImage.isNotEmpty) {
             return Scaffold(
               appBar: AppBar(
                   backgroundColor: Colors.black87,
