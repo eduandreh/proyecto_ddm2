@@ -15,7 +15,9 @@ class MainDuck extends StatefulWidget {
 }
 
 class _MainDuck extends State<MainDuck> {
-  int _swipes = 0;
+  int _swipesMallards = 0;
+  int _swipesDuckiness = 0;
+
   FirebaseManager fManager = FirebaseManager();
   String swipe = '';
 
@@ -46,15 +48,19 @@ class _MainDuck extends State<MainDuck> {
   }
 
   void _incrementSwipes() {
-    _swipes = _swipes + 1;
-    if (_swipes == 10) {
-      fManager.incrementDuffyField("Mallards", 1);
-      _mallardsNotifier.value = _mallardsNotifier.value! + 1;
-      if (_duckinessNotifier.value! < 100) {
-        fManager.incrementDuffyField("Duckiness", 0.5);
-        _duckinessNotifier.value = _duckinessNotifier.value! + 0.5;
-      }
-      _swipes = 0;
+    _swipesMallards = _swipesMallards + 1;
+    _swipesDuckiness = _swipesDuckiness + 1;
+
+    _mallardsNotifier.value = _mallardsNotifier.value! + 1;
+    if (_swipesMallards == 10) {
+      fManager.incrementDuffyField("Mallards", 10);
+      _swipesMallards = 0;
+    }
+
+    if (_swipesDuckiness == 10 && _duckinessNotifier.value! < 100) {
+      fManager.incrementDuffyField("Duckiness", 0.5);
+      _duckinessNotifier.value = _duckinessNotifier.value! + 0.5;
+      _swipesDuckiness = 0;
     }
   }
 
@@ -97,6 +103,11 @@ class _MainDuck extends State<MainDuck> {
       Navigator.of(context)
           .push(MaterialPageRoute(builder: (context) => MigrationScreen()));
     }
+  }
+
+  void updateMallards() {
+    fManager.incrementDuffyField("Mallards", _swipesMallards);
+    _swipesMallards = 0;
   }
 
   @override
@@ -392,6 +403,7 @@ class _MainDuck extends State<MainDuck> {
                       color: const Color.fromARGB(255, 255, 255, 255),
                       iconSize: 30,
                       onPressed: () async {
+                        updateMallards();
                         await Navigator.push(
                             context,
                             MaterialPageRoute(
