@@ -70,7 +70,9 @@ class _MainDuck extends State<MainDuck> {
         .difference(DateTime.parse(duffy!.created_at.toDate().toString()));
 
     int days = difference.inDays;
-    await fManager.incrementDuffyField("Life", days);
+    if (days > duffy!.life) {   //verify that more days have passed
+        await fManager.incrementDuffyField("Life", days);
+    }
   }
 
   Future<void> updateDuckiness(Duffy duffy, String weather) async {
