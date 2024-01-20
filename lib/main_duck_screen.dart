@@ -377,6 +377,7 @@ class _MainDuck extends State<MainDuck> {
                                             swipe == 'left') {
                                           _incrementSwipes();
                                         }
+                                        swipe = ''; //reset swipes
                                       }))
                                 ],
                               ),
