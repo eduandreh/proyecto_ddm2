@@ -40,7 +40,7 @@ class _MainDuck extends State<MainDuck> {
     duffy = await fManager.getDuck();
     weather = await getCurrentWeather(duffy!.location);
     await updateDuckiness(duffy!, weather!);
-    lifeCheck();
+    await lifeCheck();
     duffy = await fManager.getDuck();
     _mallardsNotifier.value = duffy!.mallards;
     _duckinessNotifier.value = duffy!.duckiness;
@@ -65,12 +65,12 @@ class _MainDuck extends State<MainDuck> {
     }
   }
 
-  void lifeCheck() async {
+  Future<void> lifeCheck() async {
     Duration difference = DateTime.now()
         .difference(DateTime.parse(duffy!.created_at.toDate().toString()));
 
     int days = difference.inDays;
-    fManager.saveDuffyLife(days);
+    await fManager.incrementDuffyField("Life", days);
   }
 
   Future<void> updateDuckiness(Duffy duffy, String weather) async {
