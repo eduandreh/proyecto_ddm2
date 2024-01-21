@@ -19,7 +19,7 @@ class FirebaseManager {
       var userActivityRef = db.collection("users").doc(userID);
       var now = DateTime.now();
 
-      return userActivityRef.set({
+      return await userActivityRef.set({
         'Last_connection': now,
       }, SetOptions(merge: true));
     }
@@ -29,7 +29,7 @@ class FirebaseManager {
     try {
       await auth.signOut();
     } catch (e) {
-      print("Error al cerrar sesión: $e");
+      print("Error signing out: $e");
     }
   }
 
@@ -41,7 +41,7 @@ Future<void> deleteDuffy() async {
   var userID = FirebaseAuth.instance.currentUser?.uid;
   if (userID != null) {
     var userActivityRef = FirebaseFirestore.instance.collection("users").doc(userID);
-    return userActivityRef.delete();
+    return await userActivityRef.delete();
   }
 }
 
@@ -53,7 +53,6 @@ Future<void> deleteDuffy() async {
 
       for (Reference item in result.items) {
         String downloadURL = await item.getDownloadURL();
-        print('Image URL: $downloadURL');
         urlList.add(downloadURL);
       }
 
@@ -112,15 +111,15 @@ Future<void> deleteDuffy() async {
     await ref.update({
       "Accessories": FieldValue.arrayRemove([{"gotten": isGotten, "name": name, "sold": !bought}]),
     }).then(
-          (value) => print("1.DocumentSnapshot successfully updated!"),
-      onError: (e) => print("1.Error updating document $e"),
+          (value) => print("$name successfully removed!"),
+      onError: (e) => print("Error removing $name document $e"),
     );
 
     await ref.update({
         "Accessories": FieldValue.arrayUnion([{"gotten": true, "name": name, "sold": bought}]),
         }).then(
-            (value) => print("2.DocumentSnapshot successfully updated!"),
-          onError: (e) => print("2.Error updating document $e"),
+            (value) => print("$name successfully updated!"),
+          onError: (e) => print("Error updating $name document $e"),
     );
 
   }
@@ -131,8 +130,8 @@ Future<void> deleteDuffy() async {
     await ref.update({
       "Outfit": accessoryImage,
     }).then(
-          (value) => print("DocumentSnapshot successfully updated!"),
-      onError: (e) => print("Error updating document $e"),
+          (value) => print("Duffy outfit successfully updated!"),
+      onError: (e) => print("Error updating outfit document $e"),
     );
   }
 
@@ -142,8 +141,8 @@ Future<void> deleteDuffy() async {
     await ref.update({
       field: FieldValue.increment(quantity),
     }).then(
-          (value) => print("5.DocumentSnapshot successfully updated!"),
-      onError: (e) => print("5.Error updating document $e"),
+          (value) => print("$field successfully updated!"),
+      onError: (e) => print("Error updating $field document $e"),
     );
 
   }
@@ -151,7 +150,6 @@ Future<void> deleteDuffy() async {
   Future<Duffy> getDuck() async {
 
     var userId = auth.currentUser!.uid;
-    print("userrrrr -> $userId");
     Duffy duffy;
     final doc = await db.collection("users").doc(userId).get();
     duffy = Duffy.fromFirestore(doc);

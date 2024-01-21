@@ -1,4 +1,3 @@
-//import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto_ddm2/signin_screen.dart';
@@ -126,7 +125,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 alignment: Alignment.center,
-                //width: MediaQuery.of(context).size.width * 0.5,
                 child: const Text(
                   'Siguiente >',
                   style: TextStyle(

@@ -88,8 +88,8 @@ class _SignInScreenState extends State<SignInScreen> {
                 });
               },
               style: ElevatedButton.styleFrom(
-                primary: const Color.fromRGBO(221, 138, 41, 1),
-                onPrimary: Colors.white,
+                backgroundColor: const Color.fromRGBO(221, 138, 41, 1),
+                foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0),
                 ),

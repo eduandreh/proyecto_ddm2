@@ -6,7 +6,7 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: 'Tu Duffy ha Migrado!',
       home: MigrationScreen(),
     );
@@ -14,6 +14,8 @@ class MyApp extends StatelessWidget {
 }
 
 class MigrationScreen extends StatelessWidget {
+  const MigrationScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
@@ -29,28 +31,28 @@ class MigrationScreen extends StatelessWidget {
               width: screenSize.width * 0.8, 
               height: screenSize.height * 0.3, 
             ),
-            SizedBox(height: 20), 
+            const SizedBox(height: 20),
             
-            Text(
-              '¡Tu Duffy ha Migrado!',
+            const Text(
+              '¡Tu Duffy ha emigrado!',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 20), 
+            const SizedBox(height: 20),
             
-            Padding(
+            const Padding(
               padding: EdgeInsets.symmetric(horizontal: 30),
               child: Text(
                 'No has cuidado bien a tu Duffy, y su duckiness ha bajado a 0, por lo que ha decidido migrar a otro lugar mejor. \nPero no te preocupes, puedes comenzar de nuevo creando un nuevo Duffy.',
                 textAlign: TextAlign.center,
               ),
             ),
-            SizedBox(height: 40), 
+            const SizedBox(height: 40),
           
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                primary: Colors.orange,
-                onPrimary: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                backgroundColor: Colors.orange,
+                foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(32.0),
                 ),
@@ -59,10 +61,10 @@ class MigrationScreen extends StatelessWidget {
                 
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => DuckCreator()),
+                  MaterialPageRoute(builder: (context) => const DuckCreator()),
                 );
               },
-              child: Text('Crear un nuevo Duffy'),
+              child: const Text('Crear un nuevo Duffy'),
             ),
           ],
         ),
