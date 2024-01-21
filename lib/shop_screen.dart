@@ -147,7 +147,7 @@ class _ShopScreen extends State<ShopScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return PopScope(canPop: false, child: Scaffold(
         appBar: AppBar(
             centerTitle: true,
             leading: BackButton(
@@ -312,6 +312,7 @@ class _ShopScreen extends State<ShopScreen> {
                   ),
                 ),
               ),
-            ])));
+            ]))
+    ));
   }
 }

@@ -44,7 +44,8 @@ class _MainDuck extends State<MainDuck> {
     duffy = await fManager.getDuck();
     _mallardsNotifier.value = duffy!.mallards;
     _duckinessNotifier.value = duffy!.duckiness;
-    _backgroundImage = await fManager.getSpecificFile("/backgrounds/", duffy!.location);
+    _backgroundImage =
+        await fManager.getSpecificFile("/backgrounds/", duffy!.location);
     return duffy!;
   }
 
@@ -70,8 +71,9 @@ class _MainDuck extends State<MainDuck> {
         .difference(DateTime.parse(duffy!.created_at.toDate().toString()));
 
     int days = difference.inDays;
-    if (days > duffy!.life) {   //verify that more days have passed
-        await fManager.incrementDuffyField("Life", days);
+    if (days > duffy!.life) {
+      //verify that more days have passed
+      await fManager.incrementDuffyField("Life", days);
     }
   }
 
@@ -118,7 +120,10 @@ class _MainDuck extends State<MainDuck> {
     return FutureBuilder(
         future: getDuffy(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null && _backgroundImage.isNotEmpty) {
+          if (snapshot.connectionState == ConnectionState.done &&
+              snapshot.hasData &&
+              snapshot.data != null &&
+              _backgroundImage.isNotEmpty) {
             return Scaffold(
               appBar: AppBar(
                   backgroundColor: Colors.black87,
@@ -367,12 +372,10 @@ class _MainDuck extends State<MainDuck> {
                                       height: 300,
                                       child: GestureDetector(
                                           onPanUpdate: (details) {
-                                        if (details.delta.dx > 4) {
-                                          swipe = 'right';
-                                        } else if (details.delta.dx < 4) {
-                                          swipe = 'left';
-                                        }
-                                      }, onPanEnd: (details) {
+                                            if (details.delta.dx.abs() > 10) {
+                                              swipe = details.delta.dx > 0 ? 'right' : 'left';
+                                            }
+                                          }, onPanEnd: (details) {
                                         if (swipe == 'right' ||
                                             swipe == 'left') {
                                           _incrementSwipes();
