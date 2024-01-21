@@ -1,4 +1,3 @@
-//import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto_ddm2/signin_screen.dart';
@@ -27,12 +26,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const SizedBox(height: 10),
-              Image.network(
-            'https://firebasestorage.googleapis.com/v0/b/duffy-264e6.appspot.com/o/plainDucks%2FLogoDUFFY.png?alt=media&token=7623a616-167f-4e25-a4fc-346455d4b642',
-            height: 100,
-            width: 100,        
-          ),
+            SizedBox(
+              height: 100,
+              child: Image(
+                  image: Image.asset("assets/placeholders/duckYellow.png").image,
+                  height: 100,
+                  width: 100),
+            ),
             const Text(
               'Empezemos!',
               style: TextStyle(
@@ -56,10 +56,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               controller: _emailTextController,
               decoration: const InputDecoration(
                 hintText: 'Correo electrónico',
-              border: OutlineInputBorder(),
                 suffixIcon: Icon(Icons.email),
-                filled: true,
-                fillColor: Color.fromRGBO(221, 138, 41, 0.1),
               ),
             ),
             const SizedBox(height: 20),
@@ -69,10 +66,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
               
               decoration: const InputDecoration(
                 hintText: 'Contraseña',
-                border: OutlineInputBorder(),
+             
             suffixIcon: Icon(Icons.lock),
-               filled: true,
-                fillColor: Color.fromRGBO(221, 138, 41, 0.1),
+               
               ),
             ),
             const SizedBox(height: 20),
@@ -82,10 +78,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
               decoration: const InputDecoration(
         
                 hintText: 'Confirmar contraseña',
-                border: OutlineInputBorder(),
+                
                 suffixIcon: Icon(Icons.lock),
-                filled: true,
-                fillColor: Color.fromRGBO(221, 138, 41, 0.1),
+              
               ),
             ),
             const SizedBox(height: 30),
@@ -130,7 +125,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 alignment: Alignment.center,
-                //width: MediaQuery.of(context).size.width * 0.5,
                 child: const Text(
                   'Siguiente >',
                   style: TextStyle(

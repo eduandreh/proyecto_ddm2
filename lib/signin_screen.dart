@@ -13,8 +13,8 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
-  TextEditingController _passwordTextController = TextEditingController();
-  TextEditingController _emailTextController = TextEditingController();
+  final TextEditingController _passwordTextController = TextEditingController();
+  final TextEditingController _emailTextController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -23,10 +23,10 @@ class _SignInScreenState extends State<SignInScreen> {
       body: Container(
         padding: const EdgeInsets.all(40),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             SizedBox(
-              height: 200,
+              height: 100,
               child: Image(
                   image: Image.asset("assets/placeholders/duckYellow.png").image,
                   height: 100,
@@ -88,8 +88,8 @@ class _SignInScreenState extends State<SignInScreen> {
                 });
               },
               style: ElevatedButton.styleFrom(
-                primary: const Color.fromRGBO(221, 138, 41, 1),
-                onPrimary: Colors.white,
+                backgroundColor: const Color.fromRGBO(221, 138, 41, 1),
+                foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0),
                 ),

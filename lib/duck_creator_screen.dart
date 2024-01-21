@@ -6,21 +6,25 @@ import 'package:proyecto_ddm2/DuffyAccessory.dart';
 import 'package:proyecto_ddm2/firebase_manager.dart';
 import 'package:proyecto_ddm2/main_duck_screen.dart';
 
-Future<void> addDuffy(String name, String location, String outfit, double coins, double duckiness, double life, List<DuffyAccessory> accessories) async {
+Future<void> addDuffy(String name, String location, String outfit, int mallards, double duckiness, int life, List<DuffyAccessory> accessories, String color) async {
   var userID = FirebaseAuth.instance.currentUser!.uid;
-  var duffyRef = FirebaseFirestore.instance.collection('duffy').doc(userID);
+  var duffyRef = FirebaseFirestore.instance.collection("users").doc(userID);
 
  var accessoriesMap = accessories.map((accessory) => accessory.toFirestore()).toList();
   return duffyRef.set({
     'Name': name,
     'Location': location,
     'Outfit': outfit,
-    'Coins': coins,
+    'Mallards': mallards,
     'Duckiness': duckiness,
     'Life': life,
     'Accessories': accessoriesMap,  
+    'Last_connection': DateTime.now(),
+    'Created_at': DateTime.now(),
+    'Color': color,
   });
 }
+
 
 
 class DuckCreator extends StatefulWidget {
@@ -47,7 +51,7 @@ String getImageUrl(DuckColor outfit) {
   }
 }
 
-const List<String> cities = <String>['Alaska', 'Barcelona', 'Egipto', 'Los Angeles', 'Paris'];
+const List<String> cities = <String>['Alaska', 'Barcelona', 'El Cairo', 'Los Angeles', 'Paris'];
 
 class _DuckCreatorState extends State<DuckCreator> {
   TextEditingController _duffyNameController = TextEditingController();
@@ -108,7 +112,7 @@ class _DuckCreatorState extends State<DuckCreator> {
               
             ),
             
-            backgroundColor: Color.fromRGBO(255, 235, 14, 1),
+            backgroundColor: Color.fromRGBO(252, 243, 38, 1),
           ), child: Container()),
 
           FilledButton(onPressed: () {
@@ -117,7 +121,7 @@ class _DuckCreatorState extends State<DuckCreator> {
           style: FilledButton.styleFrom(
             shape: CircleBorder(
             ),
-            backgroundColor: Color.fromRGBO(219, 14, 255, 1),
+            backgroundColor: Color.fromRGBO(165, 130, 253, 1),
           ), child: Container()),
 
           FilledButton(onPressed: () {
@@ -126,7 +130,7 @@ class _DuckCreatorState extends State<DuckCreator> {
           style: FilledButton.styleFrom(
             shape: CircleBorder(
             ),
-            backgroundColor: Color.fromRGBO(14, 18, 255, 1),
+            backgroundColor: Color.fromRGBO(47, 187, 187, 1),
           ), child: Container()),
 
           FilledButton(onPressed: () {
@@ -135,7 +139,7 @@ class _DuckCreatorState extends State<DuckCreator> {
           style: FilledButton.styleFrom(
             shape: CircleBorder(
             ),
-            backgroundColor: Color.fromRGBO(14, 255, 86, 1),
+            backgroundColor: Color.fromRGBO(30, 176, 89, 1),
           ), child: Container()),
 
           ]
@@ -183,13 +187,9 @@ class _DuckCreatorState extends State<DuckCreator> {
     // ),
             const SizedBox(height: 40),
             ElevatedButton(
-               onPressed: () {
-                
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const MainDuck()),
-                );
-                _createDuffy();
+               onPressed: ()  {
+                  _createDuffy();
+
                },
                style: ElevatedButton.styleFrom(
                  primary: const Color.fromRGBO(221, 138, 41, 1),
@@ -218,10 +218,12 @@ class _DuckCreatorState extends State<DuckCreator> {
       ),
     );
   }
-void _createDuffy() async {
+
+Future<void> _createDuffy() async {
   var name = _duffyNameController.text;
   var location = dropdownLocation;
   var outfit = getImageUrl(_selectedColor); 
+  var color = _selectedColor.toString().split('.').last;
   
 
   if (name.isNotEmpty && location.isNotEmpty) {
@@ -229,9 +231,10 @@ void _createDuffy() async {
       FirebaseManager fManager = FirebaseManager();
       List<DuffyAccessory> defaultAccessories = await fManager.getDefaultAccessories();
 
-       print('Accesorios ${defaultAccessories[0].name}');
 
-      await addDuffy(name, location, outfit, 0.0, 100.0, 0.0, defaultAccessories);
+      await addDuffy(name, location, outfit, 0, 100.0, 0, defaultAccessories, color);
+      Navigator.push(context, MaterialPageRoute(builder: (context) => MainDuck()));
+
     } catch (error) {
       
       print('Error al crear o actualizar Duffy: $error');
@@ -239,54 +242,3 @@ void _createDuffy() async {
   } 
 }
 }
-
-
-
-// class Duffy {
-//   final String name;
-//   final String location;
-//   final String outfit;
-//   final double coins;
-//   final double life;
-//   final double duckiness;
-
-//   Duffy({required this.name, required this.location, required this.outfit, required this.coins, required this.life, required this.duckiness});
-
-//   factory Duffy.fromFirestore(DocumentSnapshot doc) {
-//   Map data = doc.data() as Map<String, dynamic>;
-//   return Duffy(
-//     name: data['Name'] ?? '', 
-//     location: data['Location'] ?? '',
-//     outfit: data['Outfit'] ?? '',
-//     coins: data['Coins']?.toDouble() ?? 0.0, 
-//     life: data['Life']?.toDouble() ?? 100.0,
-//     duckiness: data['Duckiness']?.toDouble() ?? 0.0,
-//   );
-// }
-// }
-
-// Future<void> addDuffy(
-//   String name,
-//   String location,
-//   String outfit,
-//   double coins,
-//   double duckiness,
-//   double life,
-//   List<DuffyAccessory> accessories
-// ) async {
-//   var userID = FirebaseAuth.instance.currentUser!.uid;
-//   var duffyRef = FirebaseFirestore.instance.collection('duffy').doc(userID);
-
-//   // Convierte cada DuffyAccessory en un mapa
-//   var accessoriesMap = accessories.map((accessory) => accessory.toFirestore()).toList();
-
-//   return duffyRef.set({
-//     'Name': name,
-//     'Location': location,
-//     'Outfit': outfit,
-//     'Coins': coins,
-//     'Duckiness': duckiness,
-//     'Life': life,
-//     'Accessories': accessoriesMap, // Agrega la lista de accesorios como mapa
-//   });
-// }
