@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto_ddm2/migration_screen.dart';
 import 'package:proyecto_ddm2/settings_screen.dart';
@@ -371,33 +370,21 @@ class _MainDuck extends State<MainDuck> {
                                       width: 300,
                                       height: 300,
                                       child: GestureDetector(
-                                        onPanUpdate: (details) {
-                                          if (details.delta.dx.abs() > 10) {
-                                            swipe = details.delta.dx > 5 ? 'right' : 'left';
-                                          } else {
-                                            swipe = ''; // Reset swipes for small movements
-                                          }
-                                        },
-                                        onPanEnd: (details) {
-                                          if (swipe == 'right' || swipe == 'left') {
-                                            _incrementSwipes();
-                                          }
-                                          swipe = ''; // Reset swipes
-                                        },
-                                        child: RawGestureDetector(
-                                          gestures: <Type, GestureRecognizerFactory>{
-                                            PanGestureRecognizer: GestureRecognizerFactoryWithHandlers<PanGestureRecognizer>(
-                                                  () => PanGestureRecognizer(),
-                                                  (PanGestureRecognizer instance) {
-                                                instance
-                                                  ..onUpdate = (details) {}
-                                                  ..onEnd = (details) {};
-                                              },
-                                            ),
-                                          },
-                                          behavior: HitTestBehavior.opaque,
-                                        ),
-                                      ))
+                                          onPanUpdate: (details) {
+                                            if (details.delta.dx > 4) {
+                                              swipe = 'right';
+                                            } else if (details.delta.dx < 4) {
+                                              swipe = 'left';
+                                            } else {
+                                              swipe = '';
+                                            }
+                                          }, onPanEnd: (details) {
+                                        if (swipe == 'right' ||
+                                            swipe == 'left') {
+                                          _incrementSwipes();
+                                        }
+                                        swipe = ''; //reset swipes
+                                      }))
                                 ],
                               ),
                             ])
