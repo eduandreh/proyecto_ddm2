@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto_ddm2/migration_screen.dart';
 import 'package:proyecto_ddm2/settings_screen.dart';
@@ -31,7 +32,6 @@ class _MainDuck extends State<MainDuck> {
   @override
   void initState() {
     super.initState();
-//    saveAppOpenTime();
     _mallardsNotifier = ValueNotifier<int?>(0);
     _duckinessNotifier = ValueNotifier<double?>(100.0);
   }
@@ -371,21 +371,33 @@ class _MainDuck extends State<MainDuck> {
                                       width: 300,
                                       height: 300,
                                       child: GestureDetector(
-                                          onPanUpdate: (details) {
-                                        if (details.delta.dx.abs() > 10) {
-                                          swipe = details.delta.dx > 5
-                                              ? 'right'
-                                              : 'left';
-                                        } else {
-                                          swipe = ''; //reset swipes
-                                        }
-                                      }, onPanEnd: (details) {
-                                        if (swipe == 'right' ||
-                                            swipe == 'left') {
-                                          _incrementSwipes();
-                                        }
-                                        swipe = ''; //reset swipes
-                                      }))
+                                        onPanUpdate: (details) {
+                                          if (details.delta.dx.abs() > 10) {
+                                            swipe = details.delta.dx > 5 ? 'right' : 'left';
+                                          } else {
+                                            swipe = ''; // Reset swipes for small movements
+                                          }
+                                        },
+                                        onPanEnd: (details) {
+                                          if (swipe == 'right' || swipe == 'left') {
+                                            _incrementSwipes();
+                                          }
+                                          swipe = ''; // Reset swipes
+                                        },
+                                        child: RawGestureDetector(
+                                          gestures: <Type, GestureRecognizerFactory>{
+                                            PanGestureRecognizer: GestureRecognizerFactoryWithHandlers<PanGestureRecognizer>(
+                                                  () => PanGestureRecognizer(),
+                                                  (PanGestureRecognizer instance) {
+                                                instance
+                                                  ..onUpdate = (details) {}
+                                                  ..onEnd = (details) {};
+                                              },
+                                            ),
+                                          },
+                                          behavior: HitTestBehavior.opaque,
+                                        ),
+                                      ))
                                 ],
                               ),
                             ])
