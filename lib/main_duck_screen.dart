@@ -372,10 +372,14 @@ class _MainDuck extends State<MainDuck> {
                                       height: 300,
                                       child: GestureDetector(
                                           onPanUpdate: (details) {
-                                            if (details.delta.dx.abs() > 10) {
-                                              swipe = details.delta.dx > 0 ? 'right' : 'left';
-                                            }
-                                          }, onPanEnd: (details) {
+                                        if (details.delta.dx.abs() > 10) {
+                                          swipe = details.delta.dx > 5
+                                              ? 'right'
+                                              : 'left';
+                                        } else {
+                                          swipe = ''; //reset swipes
+                                        }
+                                      }, onPanEnd: (details) {
                                         if (swipe == 'right' ||
                                             swipe == 'left') {
                                           _incrementSwipes();
