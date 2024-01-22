@@ -6,9 +6,9 @@ Future<String> getCurrentWeather(city) async {
   Weather weather = await wf.currentWeatherByCityName(city);
   String icon = '';
   if (weather.weatherDescription != null) {
-    if(weather.temperature?.celsius != null && (weather.temperature!.celsius! > 27 || weather.temperature!.celsius! < 10 )){
+    if (weather.temperature?.celsius != null && (weather.temperature!.celsius! <= 30 && weather.temperature!.celsius! >= 10)) {
       icon = getWeatherIcon(weather.weatherDescription!);
-    }else{
+    } else {
       icon = getTempIcon(weather.temperature!.celsius!);
     }
   }
@@ -19,6 +19,7 @@ String getTempIcon(double temp) {
   if (temp < 10) {
     return "assets/weather/3snow_icon.png";
   } else {
+    print("HIIIGH $temp");
     return "assets/weather/2hot_icon.png";
   }
 }
